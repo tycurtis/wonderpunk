@@ -1,31 +1,37 @@
 @import "tailwindcss";
 
 :root {
-  --background: #faf7f2;
+  --background: #fafbff;
   --foreground: #1a1a2e;
-  --teal: #1a6b5a;
-  --teal-light: #2a8f7a;
-  --gold: #c4943d;
-  --gold-light: #e8b84a;
-  --berry: #8b2252;
-  --berry-light: #a83270;
-  --forest: #2d5a3d;
-  --cream: #f5f0e6;
-  --cream-dark: #e8dfd0;
+  --pink: #e84393;
+  --pink-light: #fd79a8;
+  --pink-dark: #c0247a;
+  --blue: #0984e3;
+  --blue-light: #74b9ff;
+  --blue-dark: #0652a8;
+  --navy: #1a1a3e;
+  --purple: #6c5ce7;
+  --purple-light: #a29bfe;
+  --white: #ffffff;
+  --ice: #f0f4ff;
+  --ice-dark: #dfe6f6;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-teal: var(--teal);
-  --color-teal-light: var(--teal-light);
-  --color-gold: var(--gold);
-  --color-gold-light: var(--gold-light);
-  --color-berry: var(--berry);
-  --color-berry-light: var(--berry-light);
-  --color-forest: var(--forest);
-  --color-cream: var(--cream);
-  --color-cream-dark: var(--cream-dark);
+  --color-pink: var(--pink);
+  --color-pink-light: var(--pink-light);
+  --color-pink-dark: var(--pink-dark);
+  --color-blue: var(--blue);
+  --color-blue-light: var(--blue-light);
+  --color-blue-dark: var(--blue-dark);
+  --color-navy: var(--navy);
+  --color-purple: var(--purple);
+  --color-purple-light: var(--purple-light);
+  --color-white: var(--white);
+  --color-ice: var(--ice);
+  --color-ice-dark: var(--ice-dark);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -55,6 +61,11 @@ html {
   50% { transform: rotate(2deg); }
 }
 
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
 .animate-float {
   animation: float 4s ease-in-out infinite;
 }
@@ -65,4 +76,9 @@ html {
 
 .animate-envelope {
   animation: envelope-wobble 3s ease-in-out infinite;
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 6s ease-in-out infinite;
 }
