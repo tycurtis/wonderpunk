@@ -1,6 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import {
+  MagicEnvelopeScene,
+  UnicornWriter,
+  PropsLayout,
+  LetterboxMoment,
+} from "./components/illustrations";
 
 function Sparkle({ className }: { className?: string }) {
   return (
@@ -12,42 +18,6 @@ function Sparkle({ className }: { className?: string }) {
       height="24"
     >
       <path d="M12 0L14.59 8.41L23 12L14.59 15.59L12 24L9.41 15.59L1 12L9.41 8.41L12 0Z" />
-    </svg>
-  );
-}
-
-function EnvelopeIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 120 90"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <rect
-        x="4"
-        y="4"
-        width="112"
-        height="82"
-        rx="6"
-        fill="#ffffff"
-        stroke="#e84393"
-        strokeWidth="3"
-      />
-      <path
-        d="M4 10L60 52L116 10"
-        stroke="#e84393"
-        strokeWidth="3"
-        strokeLinecap="round"
-      />
-      <circle cx="60" cy="72" r="8" fill="#0984e3" />
-      <path
-        d="M56 72L59 75L65 69"
-        stroke="#ffffff"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
     </svg>
   );
 }
@@ -75,7 +45,6 @@ export default function Home() {
     e.preventDefault();
     if (!email) return;
     setSubmitting(true);
-    // TODO: Connect to email service (e.g., Mailchimp, ConvertKit, or Supabase)
     await new Promise((r) => setTimeout(r, 800));
     setSubmitted(true);
     setSubmitting(false);
@@ -86,11 +55,9 @@ export default function Home() {
       {/* ═══ HERO ═══ */}
       <section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden bg-gradient-to-br from-white via-ice to-pink-light/10">
         <StarBurst />
-        <div className="max-w-3xl mx-auto text-center relative z-10">
-          <div className="mb-8 flex justify-center">
-            <div className="animate-envelope">
-              <EnvelopeIcon className="w-28 h-28 md:w-36 md:h-36" />
-            </div>
+        <div className="max-w-4xl mx-auto text-center relative z-10">
+          <div className="mb-6">
+            <MagicEnvelopeScene className="w-full max-w-lg mx-auto rounded-2xl" />
           </div>
 
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-navy mb-4">
@@ -122,26 +89,28 @@ export default function Home() {
 
       {/* ═══ THE PROBLEM ═══ */}
       <section className="py-24 px-6 bg-white">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-navy mb-8 text-center">
-            You love a kid who lives too far away.
-          </h2>
-          <div className="space-y-6 text-lg text-navy/60 leading-relaxed">
-            <p>
-              You&apos;re the fun uncle. The cool aunty. The grandparent on
-              the other side of the country. The godparent who shows up at
-              Christmas with the best present but fades between visits.
-            </p>
-            <p>
-              You FaceTime, but a four-year-old tolerates that for about 90
-              seconds before showing you a toy and wandering off. You send a
-              gift card. A book they already have. A text that gets lost in
-              the group chat.
-            </p>
-            <p className="text-navy font-medium text-xl">
-              None of it builds a real, ongoing connection. None of it is
-              magic.
-            </p>
+        <div className="max-w-4xl mx-auto md:flex md:items-center md:gap-16">
+          <div className="md:w-1/2 mb-10 md:mb-0">
+            <h2 className="text-3xl md:text-4xl font-bold text-navy mb-8">
+              You love a kid who lives too far away.
+            </h2>
+            <div className="space-y-5 text-lg text-navy/60 leading-relaxed">
+              <p>
+                You&apos;re the fun uncle. The cool aunty. The grandparent
+                on the other side of the country. The godparent who shows up
+                at Christmas with the best present but fades between visits.
+              </p>
+              <p>
+                You FaceTime, but a four-year-old tolerates that for about
+                90 seconds. You send a gift card. A book they already have.
+              </p>
+              <p className="text-navy font-medium text-xl">
+                None of it builds a real connection. None of it is magic.
+              </p>
+            </div>
+          </div>
+          <div className="md:w-1/2">
+            <LetterboxMoment className="w-full rounded-2xl" />
           </div>
         </div>
       </section>
@@ -149,16 +118,22 @@ export default function Home() {
       {/* ═══ THE SOLUTION ═══ */}
       <section className="py-24 px-6 relative bg-gradient-to-b from-white to-ice">
         <StarBurst />
-        <div className="max-w-3xl mx-auto relative z-10">
-          <h2 className="text-3xl md:text-4xl font-bold text-navy mb-4 text-center">
-            What if you could be the most anticipated
-            <br />
-            person in their week?
-          </h2>
-          <p className="text-center text-navy/50 mb-16 text-lg">
-            Wonderpunk lets you send personalised, illustrated magic letters
-            to the kids you love — no matter where you are.
-          </p>
+        <div className="max-w-4xl mx-auto relative z-10">
+          <div className="md:flex md:items-center md:gap-16 mb-20">
+            <div className="md:w-1/2 mb-10 md:mb-0 md:order-2">
+              <h2 className="text-3xl md:text-4xl font-bold text-navy mb-4">
+                What if you could be the most anticipated person in their
+                week?
+              </h2>
+              <p className="text-navy/50 text-lg">
+                Wonderpunk lets you send personalised, illustrated magic
+                letters to the kids you love — no matter where you are.
+              </p>
+            </div>
+            <div className="md:w-1/2 md:order-1">
+              <UnicornWriter className="w-full rounded-2xl" />
+            </div>
+          </div>
 
           <div className="grid md:grid-cols-3 gap-8">
             <div className="bg-white rounded-2xl p-8 text-center shadow-sm border border-ice-dark">
@@ -182,9 +157,9 @@ export default function Home() {
                 We make it real
               </h3>
               <p className="text-navy/50">
-                We print your letter on beautiful stock, add props
-                (fairy dust, treasure maps, unicorn poop), and post it to
-                their letterbox.
+                We print your letter on beautiful stock, add props (fairy
+                dust, treasure maps, unicorn poop), and post it to their
+                letterbox.
               </p>
             </div>
             <div className="bg-white rounded-2xl p-8 text-center shadow-sm border border-ice-dark">
@@ -196,8 +171,8 @@ export default function Home() {
               </h3>
               <p className="text-navy/50">
                 A letter arrives addressed to THEM. Their name, their
-                adventure, from someone who loves them. They wait for the
-                next one. Every. Single. Fortnight.
+                adventure, from someone who loves them. Every. Single.
+                Fortnight.
               </p>
             </div>
           </div>
@@ -243,8 +218,8 @@ export default function Home() {
             ))}
           </div>
           <p className="mt-10 text-white/40 text-sm">
-            All family shapes welcome. Chosen family. Blended family.
-            Any configuration of people who love a kid.
+            All family shapes welcome. Chosen family. Blended family. Any
+            configuration of people who love a kid.
           </p>
         </div>
       </section>
@@ -266,13 +241,13 @@ export default function Home() {
               {
                 step: "02",
                 title: "Choose your adventure",
-                desc: "Pick a story arc — a 12-week quest to find the Rainbow Dragon, a mystery in the Enchanted Forest, or go freestyle. Our AI writes children's literature, not generic text.",
+                desc: "Pick a story arc \u2014 a 12-week quest to find the Rainbow Dragon, a mystery in the Enchanted Forest, or go freestyle. Our AI writes children\u2019s literature, not generic text.",
                 color: "blue",
               },
               {
                 step: "03",
                 title: "Make it yours",
-                desc: "The AI drafts each letter with age-perfect language and beautiful illustrations. You review, tweak, and add the personal touches only you can — \"Remember when we found that shell at the beach? Well...\"",
+                desc: "The AI drafts each letter with age-perfect language and beautiful illustrations. You review, tweak, and add the personal touches only you can \u2014 \u201CRemember when we found that shell at the beach? Well...\u201D",
                 color: "purple",
               },
               {
@@ -306,13 +281,27 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ SAMPLE LETTER ═══ */}
+      {/* ═══ WHAT'S INSIDE ═══ */}
       <section className="py-24 px-6 bg-ice">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-navy mb-4 text-center">
+            What&apos;s inside the magic mail?
+          </h2>
+          <p className="text-center text-navy/50 mb-10 text-lg">
+            Every letter is a doorway. Sometimes with props to make the
+            magic real.
+          </p>
+          <PropsLayout className="w-full rounded-2xl" />
+        </div>
+      </section>
+
+      {/* ═══ SAMPLE LETTER ═══ */}
+      <section className="py-24 px-6 bg-white">
         <div className="max-w-2xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-navy mb-10 text-center">
             A letter from Stardust
           </h2>
-          <div className="bg-white rounded-2xl p-8 md:p-12 shadow-lg border border-ice-dark">
+          <div className="bg-ice rounded-2xl p-8 md:p-12 shadow-lg border border-ice-dark">
             <p className="text-sm text-navy/30 mb-4 italic">
               Week 1: The First Sparkle
             </p>
@@ -330,7 +319,8 @@ export default function Home() {
               </p>
               <p>
                 Look closely at your windowsill tonight. If you see a faint
-                shimmer, that means the fairy mail carriers found your house.
+                shimmer, that means the fairy mail carriers found your
+                house.
               </p>
               <p>More soon.</p>
               <p className="italic">
@@ -350,7 +340,7 @@ export default function Home() {
       </section>
 
       {/* ═══ PRICING ═══ */}
-      <section className="py-24 px-6 bg-white">
+      <section className="py-24 px-6 bg-gradient-to-b from-white to-ice">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-navy mb-4">
             Less than a coffee a week.
@@ -360,7 +350,7 @@ export default function Home() {
           </p>
 
           <div className="grid md:grid-cols-2 gap-8 max-w-2xl mx-auto">
-            <div className="bg-ice rounded-2xl p-8 text-left border-2 border-transparent">
+            <div className="bg-white rounded-2xl p-8 text-left border-2 border-transparent shadow-sm">
               <h3 className="text-sm font-bold text-blue uppercase tracking-wider mb-1">
                 Sparkle Post
               </h3>
@@ -392,7 +382,7 @@ export default function Home() {
               </ul>
             </div>
 
-            <div className="bg-ice rounded-2xl p-8 text-left border-2 border-pink relative">
+            <div className="bg-white rounded-2xl p-8 text-left border-2 border-pink relative shadow-sm">
               <span className="absolute -top-3 right-6 bg-pink text-white text-xs font-bold px-3 py-1 rounded-full">
                 MOST MAGIC
               </span>
