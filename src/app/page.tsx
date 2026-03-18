@@ -1,13 +1,121 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
+import { useState, useEffect, useRef } from "react";
 
 function Sparkle({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
       <path d="M12 0L14.59 8.41L23 12L14.59 15.59L12 24L9.41 15.59L1 12L9.41 8.41L12 0Z" />
     </svg>
+  );
+}
+
+function GlitterCanvas() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let animationId: number;
+    const particles: {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      size: number;
+      opacity: number;
+      color: string;
+      twinkleSpeed: number;
+      twinkleOffset: number;
+    }[] = [];
+
+    const colors = ["#e84393", "#fd79a8", "#0984e3", "#74b9ff", "#00d4ff", "#6c5ce7", "#a29bfe"];
+
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resize();
+    window.addEventListener("resize", resize);
+
+    // Create particles
+    for (let i = 0; i < 120; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        size: Math.random() * 3 + 1,
+        opacity: Math.random() * 0.6 + 0.1,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        twinkleSpeed: Math.random() * 0.02 + 0.005,
+        twinkleOffset: Math.random() * Math.PI * 2,
+      });
+    }
+
+    let time = 0;
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      time += 1;
+
+      particles.forEach((p) => {
+        // Swirl motion
+        const swirlX = Math.sin(time * 0.005 + p.twinkleOffset) * 0.15;
+        const swirlY = Math.cos(time * 0.004 + p.twinkleOffset) * 0.15;
+        p.x += p.vx + swirlX;
+        p.y += p.vy + swirlY;
+
+        // Wrap around
+        if (p.x < -10) p.x = canvas.width + 10;
+        if (p.x > canvas.width + 10) p.x = -10;
+        if (p.y < -10) p.y = canvas.height + 10;
+        if (p.y > canvas.height + 10) p.y = -10;
+
+        // Twinkle
+        const twinkle = Math.sin(time * p.twinkleSpeed + p.twinkleOffset);
+        const currentOpacity = p.opacity * (0.5 + twinkle * 0.5);
+
+        // Draw sparkle
+        ctx.save();
+        ctx.globalAlpha = currentOpacity;
+        ctx.fillStyle = p.color;
+        ctx.shadowColor = p.color;
+        ctx.shadowBlur = 8;
+
+        // Draw 4-point star
+        const s = p.size * (0.8 + twinkle * 0.3);
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y - s * 2);
+        ctx.lineTo(p.x + s * 0.4, p.y - s * 0.4);
+        ctx.lineTo(p.x + s * 2, p.y);
+        ctx.lineTo(p.x + s * 0.4, p.y + s * 0.4);
+        ctx.lineTo(p.x, p.y + s * 2);
+        ctx.lineTo(p.x - s * 0.4, p.y + s * 0.4);
+        ctx.lineTo(p.x - s * 2, p.y);
+        ctx.lineTo(p.x - s * 0.4, p.y - s * 0.4);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      });
+
+      animationId = requestAnimationFrame(animate);
+    };
+    animate();
+
+    return () => {
+      cancelAnimationFrame(animationId);
+      window.removeEventListener("resize", resize);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="absolute inset-0 pointer-events-none"
+    />
   );
 }
 
@@ -51,41 +159,30 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background text-white">
       {/* ═══ HERO ═══ */}
-      <section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden">
-        {/* Background image */}
-        <div className="absolute inset-0">
-          <Image
-            src="/brand/hero.jpg"
-            alt=""
-            fill
-            className="object-cover opacity-40"
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background" />
-        </div>
-
-        {/* Holographic slash */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1 h-full holographic opacity-20" />
+      <section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden bg-white">
+        <GlitterCanvas />
 
         <div className="max-w-4xl mx-auto text-center relative z-10">
-          <BunnyLogo className="w-16 h-20 mx-auto mb-8 text-white" />
+          <BunnyLogo className="w-16 h-20 mx-auto mb-8 text-gray-900" />
 
           <h1 className="text-6xl md:text-8xl font-black uppercase tracking-tighter mb-4">
-            <span className="text-white">Wonder</span>
+            <span className="text-gray-900">Wonder</span>
             <span className="text-pink-neon animate-neon">Punk</span>
           </h1>
 
           <div className="holographic h-[2px] w-48 mx-auto mb-6" />
 
-          <p className="text-xl md:text-2xl font-light tracking-widest text-white/60 uppercase mb-3">
+          <p className="text-xl md:text-2xl font-light tracking-widest text-gray-400 uppercase mb-3">
             Wonder, Delivered.
           </p>
 
-          <p className="text-lg text-white/40 max-w-xl mx-auto mb-12">
+          <p className="text-lg text-gray-400 max-w-xl mx-auto mb-12">
             Magic mail from magical friends and family.
             <br />
-            Personalised, illustrated letters that land in a
-            child&apos;s letterbox — from the people who love them most.
+            <span className="text-gray-400/60">
+              Personalised, illustrated letters that land in a
+              child&apos;s letterbox — from the people who love them most.
+            </span>
           </p>
 
           <a
@@ -95,12 +192,6 @@ export default function Home() {
             Join the Waitlist
           </a>
         </div>
-
-        {/* Sparkles */}
-        <Sparkle className="absolute top-[20%] left-[10%] w-4 h-4 text-pink-neon animate-sparkle" />
-        <Sparkle className="absolute top-[30%] right-[15%] w-3 h-3 text-cyan animate-sparkle [animation-delay:0.5s]" />
-        <Sparkle className="absolute top-[70%] left-[15%] w-3 h-3 text-pink-light animate-sparkle [animation-delay:1s]" />
-        <Sparkle className="absolute top-[60%] right-[10%] w-4 h-4 text-blue-light animate-sparkle [animation-delay:0.3s]" />
       </section>
 
       {/* ═══ THE PROBLEM ═══ */}
@@ -176,27 +267,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ LETTER IMAGERY ═══ */}
-      <section className="py-24 px-6 bg-gray-900 relative overflow-hidden">
+      {/* ═══ DIVIDER ═══ */}
+      <div className="bg-gray-900 relative">
         <div className="absolute left-0 top-0 w-full h-[1px] holographic" />
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-white mb-12 text-center">
-            Not your average <span className="text-pink-neon">mail.</span>
-          </h2>
-          <div className="relative rounded-none overflow-hidden neon-border">
-            <Image
-              src="/brand/letters-gradient.png"
-              alt="Wonderpunk studded dripping letters"
-              width={1200}
-              height={400}
-              className="w-full object-cover"
-            />
-          </div>
-          <p className="text-center text-white/30 mt-6 text-sm uppercase tracking-widest">
-            Every letter is a doorway. Sometimes with props to make the magic real.
-          </p>
-        </div>
-      </section>
+      </div>
 
       {/* ═══ FOR WHO ═══ */}
       <section className="py-24 px-6 bg-background relative">
@@ -242,17 +316,8 @@ export default function Home() {
       </section>
 
       {/* ═══ THE RABBIT HOLE ═══ */}
-      <section className="relative py-24 px-6 overflow-hidden">
-        <div className="absolute inset-0">
-          <Image
-            src="/brand/alice-rabbithole.webp"
-            alt=""
-            fill
-            className="object-cover opacity-30"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-background/40" />
-        </div>
-        <div className="max-w-3xl mx-auto relative z-10 text-center">
+      <section className="relative py-24 px-6 overflow-hidden bg-background">
+        <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-white mb-6">
             Fall down the<br />
             <span className="text-pink-neon animate-neon">rabbit hole.</span>
