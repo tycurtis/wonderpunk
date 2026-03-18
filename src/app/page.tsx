@@ -1,37 +1,35 @@
 "use client";
 
 import { useState } from "react";
-import {
-  MagicEnvelopeScene,
-  UnicornWriter,
-  PropsLayout,
-  LetterboxMoment,
-} from "./components/illustrations";
+import Image from "next/image";
 
 function Sparkle({ className }: { className?: string }) {
   return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      width="24"
-      height="24"
-    >
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
       <path d="M12 0L14.59 8.41L23 12L14.59 15.59L12 24L9.41 15.59L1 12L9.41 8.41L12 0Z" />
     </svg>
   );
 }
 
-function StarBurst() {
+function BunnyLogo({ className }: { className?: string }) {
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      <Sparkle className="absolute top-[15%] left-[10%] w-4 h-4 text-pink animate-sparkle" />
-      <Sparkle className="absolute top-[25%] right-[15%] w-3 h-3 text-blue-light animate-sparkle [animation-delay:0.5s]" />
-      <Sparkle className="absolute top-[60%] left-[8%] w-3 h-3 text-pink-light animate-sparkle [animation-delay:1s]" />
-      <Sparkle className="absolute top-[45%] right-[10%] w-5 h-5 text-blue animate-sparkle [animation-delay:0.3s]" />
-      <Sparkle className="absolute top-[80%] left-[20%] w-3 h-3 text-purple-light animate-sparkle [animation-delay:1.5s]" />
-      <Sparkle className="absolute top-[10%] right-[30%] w-4 h-4 text-pink animate-sparkle [animation-delay:0.8s]" />
-    </div>
+    <svg className={className} viewBox="0 0 80 100" fill="currentColor">
+      {/* Ears */}
+      <path d="M25 40L20 5L35 30Z" fill="currentColor" />
+      <path d="M55 40L60 5L45 30Z" fill="currentColor" />
+      {/* Head */}
+      <ellipse cx="40" cy="55" rx="25" ry="22" fill="currentColor" />
+      {/* Eyes */}
+      <circle cx="30" cy="50" r="5" fill="#e84393" />
+      <circle cx="50" cy="50" r="5" fill="#e84393" />
+      <circle cx="30" cy="50" r="2" fill="#0a0a0a" />
+      <circle cx="50" cy="50" r="2" fill="#0a0a0a" />
+      {/* Nose */}
+      <path d="M37 60L40 57L43 60L40 62Z" fill="#e84393" />
+      {/* Cross on forehead */}
+      <line x1="40" y1="38" x2="40" y2="48" stroke="#e84393" strokeWidth="2" />
+      <line x1="35" y1="43" x2="45" y2="43" stroke="#e84393" strokeWidth="2" />
+    </svg>
   );
 }
 
@@ -51,141 +49,163 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background text-white">
       {/* ═══ HERO ═══ */}
-      <section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden bg-gradient-to-br from-white via-ice to-pink-light/10">
-        <StarBurst />
-        <div className="max-w-4xl mx-auto text-center relative z-10">
-          <div className="mb-6">
-            <MagicEnvelopeScene className="w-full max-w-lg mx-auto rounded-2xl" />
-          </div>
+      <section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden">
+        {/* Background image */}
+        <div className="absolute inset-0">
+          <Image
+            src="/brand/hero.jpg"
+            alt=""
+            fill
+            className="object-cover opacity-40"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background" />
+        </div>
 
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-navy mb-4">
-            wonder
-            <span className="text-pink">punk</span>
+        {/* Holographic slash */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1 h-full holographic opacity-20" />
+
+        <div className="max-w-4xl mx-auto text-center relative z-10">
+          <BunnyLogo className="w-16 h-20 mx-auto mb-8 text-white" />
+
+          <h1 className="text-6xl md:text-8xl font-black uppercase tracking-tighter mb-4">
+            <span className="text-white">Wonder</span>
+            <span className="text-pink-neon animate-neon">Punk</span>
           </h1>
 
-          <p className="text-xl md:text-2xl font-light text-blue tracking-wide mb-3">
+          <div className="holographic h-[2px] w-48 mx-auto mb-6" />
+
+          <p className="text-xl md:text-2xl font-light tracking-widest text-white/60 uppercase mb-3">
             Wonder, Delivered.
           </p>
 
-          <p className="text-lg md:text-xl text-navy/60 max-w-xl mx-auto mb-10">
+          <p className="text-lg text-white/40 max-w-xl mx-auto mb-12">
             Magic mail from magical friends and family.
             <br />
-            <span className="text-navy/40">
-              Personalised, illustrated letters that land in a
-              child&apos;s letterbox — from the people who love them most.
-            </span>
+            Personalised, illustrated letters that land in a
+            child&apos;s letterbox — from the people who love them most.
           </p>
 
           <a
             href="#waitlist"
-            className="inline-block bg-pink text-white px-8 py-4 rounded-full text-lg font-medium hover:bg-pink-dark transition-colors shadow-lg shadow-pink/25"
+            className="inline-block bg-pink-neon text-white px-10 py-4 rounded-none text-lg font-bold uppercase tracking-wider hover:bg-pink transition-colors shadow-[0_0_30px_#e8439360]"
           >
-            Join the waitlist
+            Join the Waitlist
           </a>
         </div>
+
+        {/* Sparkles */}
+        <Sparkle className="absolute top-[20%] left-[10%] w-4 h-4 text-pink-neon animate-sparkle" />
+        <Sparkle className="absolute top-[30%] right-[15%] w-3 h-3 text-cyan animate-sparkle [animation-delay:0.5s]" />
+        <Sparkle className="absolute top-[70%] left-[15%] w-3 h-3 text-pink-light animate-sparkle [animation-delay:1s]" />
+        <Sparkle className="absolute top-[60%] right-[10%] w-4 h-4 text-blue-light animate-sparkle [animation-delay:0.3s]" />
       </section>
 
       {/* ═══ THE PROBLEM ═══ */}
-      <section className="py-24 px-6 bg-white">
-        <div className="max-w-4xl mx-auto md:flex md:items-center md:gap-16">
-          <div className="md:w-1/2 mb-10 md:mb-0">
-            <h2 className="text-3xl md:text-4xl font-bold text-navy mb-8">
-              You love a kid who lives too far away.
-            </h2>
-            <div className="space-y-5 text-lg text-navy/60 leading-relaxed">
-              <p>
-                You&apos;re the fun uncle. The cool aunty. The grandparent
-                on the other side of the country. The godparent who shows up
-                at Christmas with the best present but fades between visits.
-              </p>
-              <p>
-                You FaceTime, but a four-year-old tolerates that for about
-                90 seconds. You send a gift card. A book they already have.
-              </p>
-              <p className="text-navy font-medium text-xl">
-                None of it builds a real connection. None of it is magic.
-              </p>
-            </div>
-          </div>
-          <div className="md:w-1/2">
-            <LetterboxMoment className="w-full rounded-2xl" />
+      <section className="py-24 px-6 bg-gray-900 relative">
+        <div className="absolute left-0 top-0 w-full h-[1px] holographic" />
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-white mb-8">
+            You love a kid<br />
+            who lives too<br />
+            <span className="text-pink-neon">far away.</span>
+          </h2>
+          <div className="space-y-5 text-lg text-white/50 leading-relaxed">
+            <p>
+              You&apos;re the fun uncle. The cool aunty. The grandparent on
+              the other side of the country. The godparent who shows up at
+              Christmas with the best present but fades between visits.
+            </p>
+            <p>
+              You FaceTime, but a four-year-old tolerates that for about 90
+              seconds. You send a gift card. A book they already have.
+            </p>
+            <p className="text-white text-xl font-bold border-l-2 border-pink-neon pl-6">
+              None of it builds a real connection. None of it is magic.
+            </p>
           </div>
         </div>
       </section>
 
       {/* ═══ THE SOLUTION ═══ */}
-      <section className="py-24 px-6 relative bg-gradient-to-b from-white to-ice">
-        <StarBurst />
-        <div className="max-w-4xl mx-auto relative z-10">
-          <div className="md:flex md:items-center md:gap-16 mb-20">
-            <div className="md:w-1/2 mb-10 md:mb-0 md:order-2">
-              <h2 className="text-3xl md:text-4xl font-bold text-navy mb-4">
-                What if you could be the most anticipated person in their
-                week?
-              </h2>
-              <p className="text-navy/50 text-lg">
-                Wonderpunk lets you send personalised, illustrated magic
-                letters to the kids you love — no matter where you are.
-              </p>
-            </div>
-            <div className="md:w-1/2 md:order-1">
-              <UnicornWriter className="w-full rounded-2xl" />
-            </div>
-          </div>
+      <section className="py-24 px-6 bg-background relative">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-white mb-4 text-center">
+            Be the most <span className="text-pink-neon">anticipated</span>
+            <br />person in their week.
+          </h2>
+          <p className="text-center text-white/40 mb-16 text-lg">
+            Wonderpunk lets you send personalised, illustrated magic letters
+            to the kids you love — no matter where you are.
+          </p>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-white rounded-2xl p-8 text-center shadow-sm border border-ice-dark">
-              <div className="w-14 h-14 rounded-full bg-pink/10 flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">&#9997;&#65039;</span>
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              {
+                num: "01",
+                title: "You craft the story",
+                desc: "Our AI helps you write age-perfect letters with beautiful illustrations. Add personal touches only you would know. Takes 5 minutes.",
+              },
+              {
+                num: "02",
+                title: "We make it real",
+                desc: "We print your letter on beautiful stock, add props (fairy dust, treasure maps, unicorn poop), and post it to their letterbox.",
+              },
+              {
+                num: "03",
+                title: "They get magic mail",
+                desc: "A letter arrives addressed to THEM. Their name, their adventure, from someone who loves them. Every. Single. Fortnight.",
+              },
+            ].map((s) => (
+              <div
+                key={s.num}
+                className="neon-border bg-gray-900/50 p-8 relative group hover:shadow-[0_0_30px_#e8439340] transition-shadow"
+              >
+                <span className="text-5xl font-black text-pink-neon/20 absolute top-4 right-6">
+                  {s.num}
+                </span>
+                <h3 className="text-xl font-bold text-white mb-3 uppercase tracking-wide">
+                  {s.title}
+                </h3>
+                <p className="text-white/40 leading-relaxed">{s.desc}</p>
               </div>
-              <h3 className="text-xl font-bold text-navy mb-3">
-                You craft the story
-              </h3>
-              <p className="text-navy/50">
-                Our AI helps you write age-perfect letters with beautiful
-                illustrations. Add personal touches only you would know.
-                Takes 5 minutes.
-              </p>
-            </div>
-            <div className="bg-white rounded-2xl p-8 text-center shadow-sm border border-ice-dark">
-              <div className="w-14 h-14 rounded-full bg-blue/10 flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">&#10024;</span>
-              </div>
-              <h3 className="text-xl font-bold text-navy mb-3">
-                We make it real
-              </h3>
-              <p className="text-navy/50">
-                We print your letter on beautiful stock, add props (fairy
-                dust, treasure maps, unicorn poop), and post it to their
-                letterbox.
-              </p>
-            </div>
-            <div className="bg-white rounded-2xl p-8 text-center shadow-sm border border-ice-dark">
-              <div className="w-14 h-14 rounded-full bg-purple/10 flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">&#128141;</span>
-              </div>
-              <h3 className="text-xl font-bold text-navy mb-3">
-                They get magic mail
-              </h3>
-              <p className="text-navy/50">
-                A letter arrives addressed to THEM. Their name, their
-                adventure, from someone who loves them. Every. Single.
-                Fortnight.
-              </p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ═══ FOR WHO ═══ */}
-      <section className="py-24 px-6 bg-gradient-to-br from-navy to-blue-dark text-white">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-12">
-            Built for the people who love kids from far away.
+      {/* ═══ LETTER IMAGERY ═══ */}
+      <section className="py-24 px-6 bg-gray-900 relative overflow-hidden">
+        <div className="absolute left-0 top-0 w-full h-[1px] holographic" />
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-white mb-12 text-center">
+            Not your average <span className="text-pink-neon">mail.</span>
           </h2>
-          <div className="grid sm:grid-cols-2 gap-6 text-left max-w-2xl mx-auto">
+          <div className="relative rounded-none overflow-hidden neon-border">
+            <Image
+              src="/brand/letters-gradient.png"
+              alt="Wonderpunk studded dripping letters"
+              width={1200}
+              height={400}
+              className="w-full object-cover"
+            />
+          </div>
+          <p className="text-center text-white/30 mt-6 text-sm uppercase tracking-widest">
+            Every letter is a doorway. Sometimes with props to make the magic real.
+          </p>
+        </div>
+      </section>
+
+      {/* ═══ FOR WHO ═══ */}
+      <section className="py-24 px-6 bg-background relative">
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-white mb-12">
+            Built for the <span className="text-pink-neon">misfits</span>
+            <br />who love kids.
+          </h2>
+          <div className="grid sm:grid-cols-2 gap-4 text-left max-w-2xl mx-auto">
             {[
               {
                 who: "The Gay Uncle",
@@ -204,108 +224,59 @@ export default function Home() {
                 desc: "Two weeks on, one week off. Your letters arrive even when you can't.",
               },
             ].map((p) => (
-              <div
-                key={p.who}
-                className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/10"
-              >
-                <h3 className="font-bold text-pink-light text-lg mb-2">
+              <div key={p.who} className="neon-border bg-gray-900/50 p-6">
+                <h3 className="font-bold text-pink-neon text-lg mb-2 uppercase tracking-wide">
                   {p.who}
                 </h3>
-                <p className="text-white/70 text-sm leading-relaxed">
+                <p className="text-white/40 text-sm leading-relaxed">
                   {p.desc}
                 </p>
               </div>
             ))}
           </div>
-          <p className="mt-10 text-white/40 text-sm">
-            All family shapes welcome. Chosen family. Blended family. Any
-            configuration of people who love a kid.
+          <p className="mt-10 text-white/20 text-sm uppercase tracking-widest">
+            All family shapes welcome. Chosen family. Blended family.
+            <br />Any configuration of people who love a kid.
           </p>
         </div>
       </section>
 
-      {/* ═══ HOW IT WORKS ═══ */}
-      <section className="py-24 px-6 bg-white">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-navy mb-16 text-center">
-            How it works
-          </h2>
-          <div className="space-y-12">
-            {[
-              {
-                step: "01",
-                title: "Tell us about the kid",
-                desc: "Their name, age, interests. Does she love dinosaurs? Is he obsessed with space? Does the dog have a funny name? The more you share, the more personal the magic.",
-                color: "pink",
-              },
-              {
-                step: "02",
-                title: "Choose your adventure",
-                desc: "Pick a story arc \u2014 a 12-week quest to find the Rainbow Dragon, a mystery in the Enchanted Forest, or go freestyle. Our AI writes children\u2019s literature, not generic text.",
-                color: "blue",
-              },
-              {
-                step: "03",
-                title: "Make it yours",
-                desc: "The AI drafts each letter with age-perfect language and beautiful illustrations. You review, tweak, and add the personal touches only you can \u2014 \u201CRemember when we found that shell at the beach? Well...\u201D",
-                color: "purple",
-              },
-              {
-                step: "04",
-                title: "We handle the rest",
-                desc: "Printed on premium stock, sealed in an illustrated envelope with their name in handwriting, sometimes with a prop tucked inside. Posted to their letterbox. Magic, delivered.",
-                color: "pink",
-              },
-            ].map((s) => (
-              <div key={s.step} className="flex gap-6 items-start">
-                <div
-                  className={`flex-shrink-0 w-14 h-14 rounded-full flex items-center justify-center ${
-                    s.color === "pink"
-                      ? "bg-pink/10 text-pink"
-                      : s.color === "blue"
-                        ? "bg-blue/10 text-blue"
-                        : "bg-purple/10 text-purple"
-                  }`}
-                >
-                  <span className="font-bold text-lg">{s.step}</span>
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-navy mb-2">
-                    {s.title}
-                  </h3>
-                  <p className="text-navy/50 leading-relaxed">{s.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+      {/* ═══ THE RABBIT HOLE ═══ */}
+      <section className="relative py-24 px-6 overflow-hidden">
+        <div className="absolute inset-0">
+          <Image
+            src="/brand/alice-rabbithole.webp"
+            alt=""
+            fill
+            className="object-cover opacity-30"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-background/40" />
         </div>
-      </section>
-
-      {/* ═══ WHAT'S INSIDE ═══ */}
-      <section className="py-24 px-6 bg-ice">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-navy mb-4 text-center">
-            What&apos;s inside the magic mail?
+        <div className="max-w-3xl mx-auto relative z-10 text-center">
+          <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-white mb-6">
+            Fall down the<br />
+            <span className="text-pink-neon animate-neon">rabbit hole.</span>
           </h2>
-          <p className="text-center text-navy/50 mb-10 text-lg">
-            Every letter is a doorway. Sometimes with props to make the
-            magic real.
+          <p className="text-lg text-white/50 max-w-xl mx-auto">
+            Every letter is a new chapter. Every prop is a piece of the puzzle.
+            The story builds. The magic deepens. The kid waits by the letterbox.
+            That&apos;s Wonderpunk.
           </p>
-          <PropsLayout className="w-full rounded-2xl" />
         </div>
       </section>
 
       {/* ═══ SAMPLE LETTER ═══ */}
-      <section className="py-24 px-6 bg-white">
+      <section className="py-24 px-6 bg-gray-900">
+        <div className="absolute left-0 w-full h-[1px] holographic" />
         <div className="max-w-2xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-navy mb-10 text-center">
-            A letter from Stardust
+          <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tight text-white mb-10 text-center">
+            A letter from <span className="text-pink-neon">Stardust</span>
           </h2>
-          <div className="bg-ice rounded-2xl p-8 md:p-12 shadow-lg border border-ice-dark">
-            <p className="text-sm text-navy/30 mb-4 italic">
+          <div className="bg-white/5 p-8 md:p-12 neon-border">
+            <p className="text-sm text-pink-neon/50 mb-4 italic uppercase tracking-wider">
               Week 1: The First Sparkle
             </p>
-            <div className="font-serif text-navy/70 leading-relaxed space-y-4 text-lg">
+            <div className="font-serif text-white/70 leading-relaxed space-y-4 text-lg italic">
               <p>Dear Little One,</p>
               <p>
                 Something extraordinary happened last night. The fairies
@@ -319,106 +290,89 @@ export default function Home() {
               </p>
               <p>
                 Look closely at your windowsill tonight. If you see a faint
-                shimmer, that means the fairy mail carriers found your
-                house.
+                shimmer, that means the fairy mail carriers found your house.
               </p>
               <p>More soon.</p>
-              <p className="italic">
+              <p>
                 Your friend in magic,
                 <br />
                 Stardust
               </p>
             </div>
-            <div className="mt-6 pt-6 border-t border-ice-dark flex items-center gap-3 text-sm text-navy/30">
-              <span className="bg-pink/10 text-pink px-3 py-1 rounded-full text-xs font-medium">
+            <div className="mt-6 pt-6 border-t border-white/10 flex items-center gap-3 text-sm text-white/20">
+              <span className="border border-pink-neon/40 text-pink-neon px-3 py-1 text-xs font-bold uppercase tracking-wider">
                 Ages 3-6
               </span>
-              <span>AI-crafted, human-hearted</span>
+              <span>AI-crafted. Human-hearted.</span>
             </div>
           </div>
         </div>
       </section>
 
       {/* ═══ PRICING ═══ */}
-      <section className="py-24 px-6 bg-gradient-to-b from-white to-ice">
+      <section className="py-24 px-6 bg-background">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-navy mb-4">
-            Less than a coffee a week.
+          <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-white mb-4">
+            Less than a <span className="text-pink-neon">coffee</span> a week.
           </h2>
-          <p className="text-navy/50 mb-12 text-lg">
+          <p className="text-white/30 mb-12 text-lg">
             Two letters a month. Fortnightly magic that builds anticipation.
           </p>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-2xl mx-auto">
-            <div className="bg-white rounded-2xl p-8 text-left border-2 border-transparent shadow-sm">
-              <h3 className="text-sm font-bold text-blue uppercase tracking-wider mb-1">
+          <div className="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+            <div className="bg-gray-900/50 p-8 text-left border border-white/10">
+              <h3 className="text-sm font-bold text-cyan uppercase tracking-widest mb-1">
                 Sparkle Post
               </h3>
-              <div className="flex items-baseline gap-1 mb-4">
-                <span className="text-4xl font-bold text-navy">$14.95</span>
-                <span className="text-navy/30">/month</span>
+              <div className="flex items-baseline gap-1 mb-6">
+                <span className="text-4xl font-black text-white">$14.95</span>
+                <span className="text-white/20">/month</span>
               </div>
-              <ul className="space-y-3 text-navy/60">
-                <li className="flex items-start gap-2">
-                  <span className="text-blue mt-0.5">&#10003;</span>
-                  2 personalised illustrated letters
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-blue mt-0.5">&#10003;</span>
-                  AI story engine with children&apos;s lit principles
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-blue mt-0.5">&#10003;</span>
-                  Custom illustrated envelope
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-blue mt-0.5">&#10003;</span>
-                  Printed on premium stock
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-blue mt-0.5">&#10003;</span>
-                  Posted to their letterbox
-                </li>
+              <ul className="space-y-3 text-white/50">
+                {[
+                  "2 personalised illustrated letters",
+                  "AI story engine",
+                  "Custom illustrated envelope",
+                  "Printed on premium stock",
+                  "Posted to their letterbox",
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-2">
+                    <span className="text-cyan mt-0.5">&#10003;</span>
+                    {item}
+                  </li>
+                ))}
               </ul>
             </div>
 
-            <div className="bg-white rounded-2xl p-8 text-left border-2 border-pink relative shadow-sm">
-              <span className="absolute -top-3 right-6 bg-pink text-white text-xs font-bold px-3 py-1 rounded-full">
-                MOST MAGIC
+            <div className="p-8 text-left neon-border bg-gray-900/50 relative">
+              <span className="absolute -top-3 right-6 bg-pink-neon text-white text-xs font-black px-3 py-1 uppercase tracking-wider">
+                Most Magic
               </span>
-              <h3 className="text-sm font-bold text-pink uppercase tracking-wider mb-1">
+              <h3 className="text-sm font-bold text-pink-neon uppercase tracking-widest mb-1">
                 Magic Mail
               </h3>
-              <div className="flex items-baseline gap-1 mb-4">
-                <span className="text-4xl font-bold text-navy">$24.95</span>
-                <span className="text-navy/30">/month</span>
+              <div className="flex items-baseline gap-1 mb-6">
+                <span className="text-4xl font-black text-white">$24.95</span>
+                <span className="text-white/20">/month</span>
               </div>
-              <ul className="space-y-3 text-navy/60">
-                <li className="flex items-start gap-2">
-                  <span className="text-pink mt-0.5">&#10003;</span>
-                  Everything in Sparkle Post
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-pink mt-0.5">&#10003;</span>
-                  Themed props in every letter
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-pink mt-0.5">&#10003;</span>
-                  Fairy dust, treasure maps, unicorn poop
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-pink mt-0.5">&#10003;</span>
-                  Premium sealed envelope
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-pink mt-0.5">&#10003;</span>
-                  Story compilation book option
-                </li>
+              <ul className="space-y-3 text-white/50">
+                {[
+                  "Everything in Sparkle Post",
+                  "Themed props in every letter",
+                  "Fairy dust, treasure maps, unicorn poop",
+                  "Premium sealed envelope",
+                  "Story compilation book option",
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-2">
+                    <span className="text-pink-neon mt-0.5">&#10003;</span>
+                    {item}
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
 
-          <p className="mt-8 text-navy/30 text-sm">
+          <p className="mt-8 text-white/15 text-sm uppercase tracking-widest">
             Gift subscriptions available in 3, 6, and 12 month packs.
             <br />
             Prices in AUD. Launching in Australia first.
@@ -429,26 +383,27 @@ export default function Home() {
       {/* ═══ WAITLIST ═══ */}
       <section
         id="waitlist"
-        className="py-24 px-6 bg-gradient-to-br from-pink via-pink-dark to-blue-dark"
+        className="py-24 px-6 bg-gray-900 relative"
       >
+        <div className="absolute left-0 top-0 w-full h-[1px] holographic" />
         <div className="max-w-xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Be first to send magic.
+          <BunnyLogo className="w-12 h-16 mx-auto mb-6 text-pink-neon" />
+          <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-white mb-4">
+            Be first to send <span className="text-pink-neon">magic.</span>
           </h2>
-          <p className="text-white/70 mb-10 text-lg">
+          <p className="text-white/40 mb-10 text-lg">
             We&apos;re launching soon. Join the waitlist and we&apos;ll let
             you know when you can start sending wonder.
           </p>
 
           {submitted ? (
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
-              <div className="text-4xl mb-4">&#10024;</div>
-              <h3 className="text-xl font-bold text-white mb-2">
-                You&apos;re on the list!
+            <div className="neon-border bg-gray-900/50 p-8">
+              <Sparkle className="w-8 h-8 text-pink-neon mx-auto mb-4" />
+              <h3 className="text-xl font-black text-white uppercase mb-2">
+                You&apos;re on the list.
               </h3>
-              <p className="text-white/70">
-                We&apos;ll be in touch soon. The fairies have noted your
-                address.
+              <p className="text-white/40">
+                The fairies have noted your address.
               </p>
             </div>
           ) : (
@@ -459,11 +414,11 @@ export default function Home() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Your email"
                 required
-                className="w-full px-6 py-4 rounded-full bg-white/15 backdrop-blur-sm border border-white/25 text-white placeholder:text-white/40 text-lg focus:outline-none focus:ring-2 focus:ring-white/50"
+                className="w-full px-6 py-4 bg-black/50 border border-white/15 text-white placeholder:text-white/25 text-lg focus:outline-none focus:border-pink-neon transition-colors"
               />
 
               <div className="flex flex-wrap justify-center gap-2">
-                <span className="text-white/50 text-sm self-center mr-1">
+                <span className="text-white/30 text-sm self-center mr-1 uppercase tracking-wider">
                   I&apos;m a:
                 </span>
                 {[
@@ -477,10 +432,10 @@ export default function Home() {
                     key={p}
                     type="button"
                     onClick={() => setPersona(p)}
-                    className={`px-4 py-2 rounded-full text-sm transition-colors ${
+                    className={`px-4 py-2 text-sm transition-colors uppercase tracking-wider ${
                       persona === p
-                        ? "bg-white text-pink-dark font-medium"
-                        : "bg-white/10 text-white/70 hover:bg-white/20 border border-white/15"
+                        ? "bg-pink-neon text-white font-bold"
+                        : "border border-white/15 text-white/40 hover:border-pink-neon/50"
                     }`}
                   >
                     {p}
@@ -491,9 +446,9 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full bg-white text-pink-dark px-8 py-4 rounded-full text-lg font-bold hover:bg-white/90 transition-colors disabled:opacity-50 shadow-lg"
+                className="w-full bg-pink-neon text-white px-8 py-4 text-lg font-black uppercase tracking-wider hover:bg-pink transition-colors disabled:opacity-50 shadow-[0_0_30px_#e8439340]"
               >
-                {submitting ? "Joining..." : "Join the waitlist"}
+                {submitting ? "Joining..." : "Join the Waitlist"}
               </button>
             </form>
           )}
@@ -501,15 +456,18 @@ export default function Home() {
       </section>
 
       {/* ═══ FOOTER ═══ */}
-      <footer className="py-12 px-6 bg-navy text-white/40">
+      <footer className="py-12 px-6 bg-background border-t border-white/5">
         <div className="max-w-3xl mx-auto text-center space-y-4">
-          <p className="text-white/60 font-bold text-lg">
-            wonder<span className="text-pink">punk</span>
-          </p>
-          <p className="text-sm">
+          <div className="flex items-center justify-center gap-3">
+            <BunnyLogo className="w-6 h-8 text-white/40" />
+            <p className="text-white/40 font-black text-lg uppercase tracking-wider">
+              Wonder<span className="text-pink-neon">Punk</span>
+            </p>
+          </div>
+          <p className="text-sm text-white/20">
             Wonder, Delivered. Magic mail from magical friends and family.
           </p>
-          <p className="text-xs text-white/25">
+          <p className="text-xs text-white/10 uppercase tracking-widest">
             A product of Activate Studios Pty Ltd, Brisbane, Australia.
             <br />
             All families welcome. All magic real.

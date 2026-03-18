@@ -1,20 +1,24 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fafbff;
-  --foreground: #1a1a2e;
+  --background: #0a0a0a;
+  --foreground: #ffffff;
   --pink: #e84393;
   --pink-light: #fd79a8;
   --pink-dark: #c0247a;
+  --pink-neon: #ff2d95;
   --blue: #0984e3;
   --blue-light: #74b9ff;
   --blue-dark: #0652a8;
-  --navy: #1a1a3e;
+  --cyan: #00d4ff;
+  --navy: #0a0a1a;
   --purple: #6c5ce7;
   --purple-light: #a29bfe;
   --white: #ffffff;
-  --ice: #f0f4ff;
-  --ice-dark: #dfe6f6;
+  --gray-900: #111111;
+  --gray-800: #1a1a1a;
+  --gray-700: #2a2a2a;
+  --gray-400: #888888;
 }
 
 @theme inline {
@@ -23,17 +27,20 @@
   --color-pink: var(--pink);
   --color-pink-light: var(--pink-light);
   --color-pink-dark: var(--pink-dark);
+  --color-pink-neon: var(--pink-neon);
   --color-blue: var(--blue);
   --color-blue-light: var(--blue-light);
   --color-blue-dark: var(--blue-dark);
+  --color-cyan: var(--cyan);
   --color-navy: var(--navy);
   --color-purple: var(--purple);
   --color-purple-light: var(--purple-light);
   --color-white: var(--white);
-  --color-ice: var(--ice);
-  --color-ice-dark: var(--ice-dark);
+  --color-gray-900: var(--gray-900);
+  --color-gray-800: var(--gray-800);
+  --color-gray-700: var(--gray-700);
+  --color-gray-400: var(--gray-400);
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
 body {
@@ -46,39 +53,45 @@ html {
   scroll-behavior: smooth;
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-12px); }
-}
-
 @keyframes sparkle {
   0%, 100% { opacity: 0.3; transform: scale(0.8); }
   50% { opacity: 1; transform: scale(1.2); }
 }
 
-@keyframes envelope-wobble {
-  0%, 100% { transform: rotate(-2deg); }
-  50% { transform: rotate(2deg); }
+@keyframes neon-pulse {
+  0%, 100% { text-shadow: 0 0 10px #e84393, 0 0 40px #e84393, 0 0 80px #e8439380; }
+  50% { text-shadow: 0 0 20px #e84393, 0 0 60px #e84393, 0 0 120px #e8439380; }
 }
 
-@keyframes gradient-shift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+@keyframes glow-line {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
 
-.animate-float {
-  animation: float 4s ease-in-out infinite;
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
 }
 
 .animate-sparkle {
   animation: sparkle 2s ease-in-out infinite;
 }
 
-.animate-envelope {
-  animation: envelope-wobble 3s ease-in-out infinite;
+.animate-neon {
+  animation: neon-pulse 3s ease-in-out infinite;
 }
 
-.animate-gradient {
-  background-size: 200% 200%;
-  animation: gradient-shift 6s ease-in-out infinite;
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.neon-border {
+  box-shadow: 0 0 15px #e8439340, inset 0 0 15px #e8439310;
+  border: 1px solid #e8439360;
+}
+
+.holographic {
+  background: linear-gradient(135deg, #00d4ff 0%, #e84393 25%, #6c5ce7 50%, #74b9ff 75%, #fd79a8 100%);
+  background-size: 300% 300%;
+  animation: glow-line 4s linear infinite;
 }
