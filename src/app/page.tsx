@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { UnicornWriter, PropsLayout, LetterboxMoment } from "./components/illustrations";
 
 function Sparkle({ className }: { className?: string }) {
   return (
@@ -197,25 +198,30 @@ export default function Home() {
       {/* ═══ THE PROBLEM ═══ */}
       <section className="py-24 px-6 bg-gray-900 relative">
         <div className="absolute left-0 top-0 w-full h-[1px] holographic" />
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-white mb-8">
-            You love a kid<br />
-            who lives too<br />
-            <span className="text-pink-neon">far away.</span>
-          </h2>
-          <div className="space-y-5 text-lg text-white/50 leading-relaxed">
-            <p>
-              You&apos;re the fun uncle. The cool aunty. The grandparent on
-              the other side of the country. The godparent who shows up at
-              Christmas with the best present but fades between visits.
-            </p>
-            <p>
-              You FaceTime, but a four-year-old tolerates that for about 90
-              seconds. You send a gift card. A book they already have.
-            </p>
-            <p className="text-white text-xl font-bold border-l-2 border-pink-neon pl-6">
-              None of it builds a real connection. None of it is magic.
-            </p>
+        <div className="max-w-4xl mx-auto md:flex md:items-center md:gap-16">
+          <div className="md:w-1/2 mb-10 md:mb-0">
+            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-white mb-8">
+              You love a kid<br />
+              who lives too<br />
+              <span className="text-pink-neon">far away.</span>
+            </h2>
+            <div className="space-y-5 text-lg text-white/50 leading-relaxed">
+              <p>
+                You&apos;re the fun uncle. The cool aunty. The grandparent on
+                the other side of the country. The godparent who shows up at
+                Christmas with the best present but fades between visits.
+              </p>
+              <p>
+                You FaceTime, but a four-year-old tolerates that for about 90
+                seconds. You send a gift card. A book they already have.
+              </p>
+              <p className="text-white text-xl font-bold border-l-2 border-pink-neon pl-6">
+                None of it builds a real connection. None of it is magic.
+              </p>
+            </div>
+          </div>
+          <div className="md:w-1/2">
+            <LetterboxMoment className="w-full" />
           </div>
         </div>
       </section>
@@ -223,14 +229,21 @@ export default function Home() {
       {/* ═══ THE SOLUTION ═══ */}
       <section className="py-24 px-6 bg-background relative">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-white mb-4 text-center">
-            Be the most <span className="text-pink-neon">anticipated</span>
-            <br />person in their week.
-          </h2>
-          <p className="text-center text-white/40 mb-16 text-lg">
-            Wonderpunk lets you send personalised, illustrated magic letters
-            to the kids you love — no matter where you are.
-          </p>
+          <div className="md:flex md:items-center md:gap-16 mb-20">
+            <div className="md:w-1/2 mb-10 md:mb-0">
+              <UnicornWriter className="w-full" />
+            </div>
+            <div className="md:w-1/2">
+              <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-white mb-4">
+                Be the most <span className="text-pink-neon">anticipated</span>
+                <br />person in their week.
+              </h2>
+              <p className="text-white/40 text-lg">
+                Wonderpunk lets you send personalised, illustrated magic letters
+                to the kids you love — no matter where you are.
+              </p>
+            </div>
+          </div>
 
           <div className="grid md:grid-cols-3 gap-6">
             {[
@@ -317,16 +330,16 @@ export default function Home() {
 
       {/* ═══ THE RABBIT HOLE ═══ */}
       <section className="relative py-24 px-6 overflow-hidden bg-background">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-white mb-6">
-            Fall down the<br />
-            <span className="text-pink-neon animate-neon">rabbit hole.</span>
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-white mb-4 text-center">
+            What&apos;s inside the<br />
+            <span className="text-pink-neon animate-neon">magic mail?</span>
           </h2>
-          <p className="text-lg text-white/50 max-w-xl mx-auto">
+          <p className="text-lg text-white/40 max-w-xl mx-auto text-center mb-12">
             Every letter is a new chapter. Every prop is a piece of the puzzle.
             The story builds. The magic deepens. The kid waits by the letterbox.
-            That&apos;s Wonderpunk.
           </p>
+          <PropsLayout className="w-full" />
         </div>
       </section>
 
