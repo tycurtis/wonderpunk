@@ -195,20 +195,25 @@ export default function ParallaxSteps() {
   const continuousStep = scrollProgress * (totalSteps - 1);
   const activeStep = Math.round(continuousStep);
 
-  // Calculate per-step opacity and transform based on continuous scroll
+  // Ease function for smoother feel
+  const ease = (t: number) => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+
   const getStepStyle = (index: number) => {
     const distance = continuousStep - index;
     const absDistance = Math.abs(distance);
 
-    // Smooth interpolation
-    const opacity = Math.max(0, 1 - absDistance * 1.5);
-    const translateY = distance * -60;
-    const scale = 1 - absDistance * 0.15;
+    // Use eased opacity for smoother fade
+    const rawOpacity = Math.max(0, 1 - absDistance * 1.2);
+    const opacity = ease(rawOpacity);
+    const translateY = distance * -100;
+    const scale = 1 - absDistance * 0.12;
+    const blur = absDistance > 0.5 ? (absDistance - 0.5) * 8 : 0;
 
     return {
       opacity,
-      transform: `translateY(${translateY}px) scale(${Math.max(0.7, scale)})`,
-      transition: "none", // No CSS transition — driven purely by scroll position
+      transform: `translateY(${translateY}px) scale(${Math.max(0.75, scale)})`,
+      filter: `blur(${blur}px)`,
+      transition: "none",
     };
   };
 
@@ -216,12 +221,14 @@ export default function ParallaxSteps() {
     const distance = continuousStep - index;
     const absDistance = Math.abs(distance);
 
-    const opacity = Math.max(0, 1 - absDistance * 2);
-    const translateY = distance * -80;
+    const rawOpacity = Math.max(0, 1 - absDistance * 1.4);
+    const opacity = ease(rawOpacity);
+    const translateY = distance * -120;
+    const translateX = distance * 20;
 
     return {
       opacity,
-      transform: `translateY(${translateY}px)`,
+      transform: `translateY(${translateY}px) translateX(${translateX}px)`,
       transition: "none",
     };
   };
@@ -240,7 +247,7 @@ export default function ParallaxSteps() {
       </div>
 
       {/* Desktop: tall scrollable container with sticky panels */}
-      <div className="hidden md:block" style={{ height: `${totalSteps * 100}vh` }}>
+      <div className="hidden md:block" style={{ height: `${totalSteps * 150}vh` }}>
         <div className="sticky top-0 h-screen flex overflow-hidden">
           {/* Left — animated icon */}
           <div className="w-1/2 flex items-center justify-center px-12 relative">

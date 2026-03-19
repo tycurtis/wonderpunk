@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { UnicornWriter, PropsLayout, LetterboxMoment, LetterboxExplosion } from "./components/illustrations";
+import { UnicornWriter, LetterboxMoment, LetterboxExplosion } from "./components/illustrations";
 import ParallaxSteps from "./components/parallax-steps";
+import MagicMailReveal from "./components/magic-mail-reveal";
 
 function Sparkle({ className }: { className?: string }) {
   return (
@@ -292,20 +293,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ THE RABBIT HOLE ═══ */}
-      <section className="relative py-24 px-6 overflow-hidden bg-background">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-white mb-4 text-center">
-            What&apos;s inside the<br />
-            <span className="text-pink-neon animate-neon">magic mail?</span>
-          </h2>
-          <p className="text-lg text-white/40 max-w-xl mx-auto text-center mb-12">
-            Every letter is a new chapter. Every prop is a piece of the puzzle.
-            The story builds. The magic deepens. The kid waits by the letterbox.
-          </p>
-          <PropsLayout className="w-full" />
-        </div>
-      </section>
+      {/* ═══ WHAT'S INSIDE ═══ */}
+      <MagicMailReveal />
 
       {/* ═══ SAMPLE LETTER ═══ */}
       <section className="py-24 px-6 bg-gray-900">
