@@ -198,37 +198,51 @@ export default function ParallaxSteps() {
   // Ease function for smoother feel
   const ease = (t: number) => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
 
-  const getStepStyle = (index: number) => {
-    const distance = continuousStep - index;
-    const absDistance = Math.abs(distance);
+  // Each step occupies a range. Within that range:
+  // 0-15%: fade in from black
+  // 15-75%: fully visible (hold)
+  // 75-100%: fade out to black
+  const getVisibility = (index: number) => {
+    const stepSize = 1 / totalSteps;
+    const stepStart = index * stepSize;
+    const stepEnd = stepStart + stepSize;
 
-    // Use eased opacity for smoother fade
-    const rawOpacity = Math.max(0, 1 - absDistance * 1.2);
-    const opacity = ease(rawOpacity);
-    const translateY = distance * -100;
-    const scale = 1 - absDistance * 0.12;
-    const blur = absDistance > 0.5 ? (absDistance - 0.5) * 8 : 0;
+    // Where are we within this step's range?
+    const localProgress = (scrollProgress - stepStart) / stepSize;
+
+    if (localProgress < 0 || localProgress > 1) return 0;
+
+    // Fade in zone: 0 to 0.15
+    if (localProgress < 0.15) {
+      return ease(localProgress / 0.15);
+    }
+    // Hold zone: 0.15 to 0.75
+    if (localProgress < 0.75) {
+      return 1;
+    }
+    // Fade out zone: 0.75 to 1.0
+    return ease(1 - (localProgress - 0.75) / 0.25);
+  };
+
+  const getStepStyle = (index: number) => {
+    const opacity = getVisibility(index);
+    const distance = continuousStep - index;
+    const scale = 0.9 + opacity * 0.1;
 
     return {
       opacity,
-      transform: `translateY(${translateY}px) scale(${Math.max(0.75, scale)})`,
-      filter: `blur(${blur}px)`,
+      transform: `scale(${scale})`,
       transition: "none",
     };
   };
 
   const getTextStyle = (index: number) => {
-    const distance = continuousStep - index;
-    const absDistance = Math.abs(distance);
-
-    const rawOpacity = Math.max(0, 1 - absDistance * 1.4);
-    const opacity = ease(rawOpacity);
-    const translateY = distance * -120;
-    const translateX = distance * 20;
+    const opacity = getVisibility(index);
+    const translateY = (1 - opacity) * 30 * (continuousStep > index ? -1 : 1);
 
     return {
       opacity,
-      transform: `translateY(${translateY}px) translateX(${translateX}px)`,
+      transform: `translateY(${translateY}px)`,
       transition: "none",
     };
   };
