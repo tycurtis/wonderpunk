@@ -1,3 +1,176 @@
+export function LetterboxExplosion({ className }: { className?: string }) {
+  // Generate deterministic glitter particles
+  const glitter: { x: number; y: number; angle: number; dist: number; size: number; color: string; delay: number }[] = [];
+  const colors = ["#e84393", "#fd79a8", "#00d4ff", "#74b9ff", "#6c5ce7", "#a29bfe", "#ff2d95", "#ffffff"];
+  for (let i = 0; i < 60; i++) {
+    const angle = (i / 60) * 360 + (i * 37) % 40 - 20;
+    const rad = (angle * Math.PI) / 180;
+    const dist = 40 + (i * 13) % 120;
+    glitter.push({
+      x: Math.cos(rad) * dist,
+      y: Math.sin(rad) * dist - Math.abs(Math.cos(rad)) * 30,
+      angle,
+      dist,
+      size: 1.5 + (i * 7) % 4,
+      color: colors[i % colors.length],
+      delay: (i * 0.03),
+    });
+  }
+
+  return (
+    <svg className={className} viewBox="0 0 600 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="le-glow-pink">
+          <feGaussianBlur stdDeviation="4" result="blur" />
+          <feFlood floodColor="#e84393" floodOpacity="0.6" result="color" />
+          <feComposite in="color" in2="blur" operator="in" result="glow" />
+          <feMerge><feMergeNode in="glow" /><feMergeNode in="SourceGraphic" /></feMerge>
+        </filter>
+        <filter id="le-glow-white">
+          <feGaussianBlur stdDeviation="6" result="blur" />
+          <feFlood floodColor="#ffffff" floodOpacity="0.3" result="color" />
+          <feComposite in="color" in2="blur" operator="in" result="glow" />
+          <feMerge><feMergeNode in="glow" /><feMergeNode in="SourceGraphic" /></feMerge>
+        </filter>
+        <clipPath id="letterbox-mask">
+          <rect x="0" y="200" width="600" height="200" />
+        </clipPath>
+      </defs>
+
+      <rect width="600" height="400" fill="#111111" />
+
+      {/* Ground shadow */}
+      <ellipse cx="300" cy="370" rx="120" ry="8" fill="#e84393" opacity="0.06" />
+
+      {/* Letterbox post */}
+      <rect x="290" y="300" width="20" height="80" fill="#1a1a2e" stroke="#e84393" strokeWidth="0.5" opacity="0.4" />
+
+      {/* Letterbox body - back */}
+      <rect x="240" y="200" width="120" height="100" fill="#1a1a2e" stroke="#e84393" strokeWidth="1" opacity="0.6" />
+
+      {/* GLITTER EXPLOSION - centered at the letterbox slot */}
+      <g style={{ transformOrigin: "300px 195px" }}>
+        {glitter.map((g, i) => (
+          <g key={i}>
+            {/* Star sparkle */}
+            <path
+              d={`M300 195L${300 + g.size * 0.3} ${195 - g.size * 0.3}L${300} ${195 - g.size}L${300 - g.size * 0.3} ${195 - g.size * 0.3}Z`}
+              fill={g.color}
+              opacity="0"
+            >
+              <animateTransform
+                attributeName="transform"
+                type="translate"
+                values={`0,0; ${g.x * 0.3},${g.y * 0.3}; ${g.x},${g.y}`}
+                dur="3s"
+                begin={`${1.2 + g.delay}s`}
+                repeatCount="indefinite"
+                calcMode="spline"
+                keySplines="0.2 0.8 0.2 1; 0.4 0 1 0.6"
+              />
+              <animate
+                attributeName="opacity"
+                values="0;0;0.9;0.8;0"
+                keyTimes="0;0.3;0.4;0.7;1"
+                dur="3s"
+                begin={`${1.2 + g.delay}s`}
+                repeatCount="indefinite"
+              />
+              <animateTransform
+                attributeName="transform"
+                type="rotate"
+                values="0 300 195; 180 300 195; 360 300 195"
+                dur="3s"
+                begin={`${1.2 + g.delay}s`}
+                repeatCount="indefinite"
+                additive="sum"
+              />
+            </path>
+            {/* Circle glitter */}
+            <circle cx="300" cy="195" r={g.size * 0.6} fill={g.color} opacity="0">
+              <animateTransform
+                attributeName="transform"
+                type="translate"
+                values={`0,0; ${g.x * 0.5},${g.y * 0.5}; ${g.x * 1.2},${g.y * 1.3 + 20}`}
+                dur="3s"
+                begin={`${1.3 + g.delay}s`}
+                repeatCount="indefinite"
+                calcMode="spline"
+                keySplines="0.2 0.8 0.2 1; 0.4 0 1 0.6"
+              />
+              <animate
+                attributeName="opacity"
+                values="0;0;0.7;0.5;0"
+                keyTimes="0;0.3;0.45;0.75;1"
+                dur="3s"
+                begin={`${1.3 + g.delay}s`}
+                repeatCount="indefinite"
+              />
+            </circle>
+          </g>
+        ))}
+      </g>
+
+      {/* THE LETTER - rises up then back down */}
+      <g>
+        <animateTransform
+          attributeName="transform"
+          type="translate"
+          values="0,0; 0,0; 0,-80; 0,-80; 0,0"
+          keyTimes="0; 0.3; 0.45; 0.7; 1"
+          dur="3s"
+          repeatCount="indefinite"
+          calcMode="spline"
+          keySplines="0 0 1 1; 0.2 0.8 0.3 1; 0 0 1 1; 0.6 0 0.8 0.2"
+        />
+        {/* Envelope */}
+        <rect x="265" y="175" width="70" height="50" fill="#1a1a1a" stroke="#e84393" strokeWidth="2" filter="url(#le-glow-pink)" />
+        <path d="M265 180L300 205L335 180" stroke="#e84393" strokeWidth="2" strokeLinecap="round" fill="none" />
+        {/* Wax seal */}
+        <circle cx="300" cy="215" r="8" fill="#e84393" />
+        <circle cx="300" cy="215" r="5" fill="#ff2d95" />
+        <path d="M300 211L301 214L304 214L302 216L303 219L300 217L297 219L298 216L296 214L299 214Z" fill="white" opacity="0.8" />
+        {/* Name on envelope */}
+        <line x1="278" y1="195" x2="310" y2="195" stroke="#00d4ff" strokeWidth="1" opacity="0.4" />
+        <line x1="282" y1="200" x2="305" y2="200" stroke="#00d4ff" strokeWidth="1" opacity="0.3" />
+      </g>
+
+      {/* Letterbox front panel (covers letter when inside) */}
+      <rect x="240" y="200" width="120" height="30" fill="#1a1a2e" stroke="#e84393" strokeWidth="1.5" />
+      {/* Slot */}
+      <rect x="260" y="210" width="80" height="6" fill="#0a0a0a" stroke="#e84393" strokeWidth="0.5" opacity="0.8" />
+      {/* Slot glow */}
+      <rect x="262" y="211" width="76" height="4" fill="#e84393" opacity="0.15">
+        <animate attributeName="opacity" values="0.05;0.2;0.05" dur="3s" repeatCount="indefinite" />
+      </rect>
+
+      {/* Letterbox body front - lower */}
+      <rect x="240" y="230" width="120" height="70" fill="#1a1a2e" stroke="#e84393" strokeWidth="0.5" opacity="0.7" />
+
+      {/* Central neon flash at moment of explosion */}
+      <circle cx="300" cy="195" r="30" fill="#e84393" opacity="0" filter="url(#le-glow-white)">
+        <animate
+          attributeName="opacity"
+          values="0;0;0.5;0.1;0"
+          keyTimes="0;0.38;0.42;0.5;1"
+          dur="3s"
+          repeatCount="indefinite"
+        />
+        <animate
+          attributeName="r"
+          values="10;10;50;80;80"
+          keyTimes="0;0.38;0.42;0.6;1"
+          dur="3s"
+          repeatCount="indefinite"
+        />
+      </circle>
+
+      {/* Small text below */}
+      <text x="300" y="390" textAnchor="middle" fontSize="10" fill="#e84393" opacity="0.3" fontFamily="monospace" letterSpacing="4">MAGIC, DELIVERED.</text>
+    </svg>
+  );
+}
+
 export function UnicornWriter({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">

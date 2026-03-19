@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { UnicornWriter, PropsLayout, LetterboxMoment } from "./components/illustrations";
+import { UnicornWriter, PropsLayout, LetterboxMoment, LetterboxExplosion } from "./components/illustrations";
 
 function Sparkle({ className }: { className?: string }) {
   return (
@@ -325,6 +325,20 @@ export default function Home() {
             All family shapes welcome. Chosen family. Blended family.
             <br />Any configuration of people who love a kid.
           </p>
+        </div>
+      </section>
+
+      {/* ═══ THE MOMENT ═══ */}
+      <section className="py-24 px-6 bg-gray-900 relative">
+        <div className="absolute left-0 top-0 w-full h-[1px] holographic" />
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-white mb-4">
+            The <span className="text-pink-neon">moment</span> it arrives.
+          </h2>
+          <p className="text-white/40 mb-12 text-lg">
+            This is what it&apos;s all about. The letterbox. The envelope. The explosion of wonder.
+          </p>
+          <LetterboxExplosion className="w-full max-w-2xl mx-auto" />
         </div>
       </section>
 
