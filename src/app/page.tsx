@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import { UnicornWriter, LetterboxMoment, LetterboxExplosion } from "./components/illustrations";
 import ParallaxSteps from "./components/parallax-steps";
 import MagicMailReveal from "./components/magic-mail-reveal";
@@ -297,45 +298,73 @@ export default function Home() {
       <MagicMailReveal />
 
       {/* ═══ SAMPLE LETTER ═══ */}
-      <section className="py-24 px-6 bg-gray-900">
-        <div className="absolute left-0 w-full h-[1px] holographic" />
-        <div className="max-w-2xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tight text-white mb-10 text-center">
-            A letter from <span className="text-pink-neon">Stardust</span>
+      <section className="py-24 px-6 bg-gray-900 relative">
+        <div className="absolute left-0 top-0 w-full h-[1px] holographic" />
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tight text-white mb-4 text-center">
+            This is a <span className="text-pink-neon">real letter.</span>
           </h2>
-          <div className="bg-white/5 p-8 md:p-12 neon-border">
-            <p className="text-sm text-pink-neon/50 mb-4 italic uppercase tracking-wider">
-              Week 1: The First Sparkle
-            </p>
-            <div className="font-serif text-white/70 leading-relaxed space-y-4 text-lg italic">
-              <p>Dear Little One,</p>
-              <p>
-                Something extraordinary happened last night. The fairies
-                held a Grand Council under the old oak tree and YOUR name
-                came up. They said you have the rarest kind of magic — the
-                kind that comes from a truly kind heart.
-              </p>
-              <p>
-                So they asked me, Stardust the Unicorn, to write to you
-                every fortnight and share the news from our enchanted world.
-              </p>
-              <p>
-                Look closely at your windowsill tonight. If you see a faint
-                shimmer, that means the fairy mail carriers found your house.
-              </p>
-              <p>More soon.</p>
-              <p>
-                Your friend in magic,
-                <br />
-                Stardust
-              </p>
+          <p className="text-center text-white/40 mb-12 text-lg">
+            AI-crafted. Human-hearted. Illustrated. Personalised. Printed and posted to their letterbox.
+          </p>
+
+          {/* Envelope + letter composition */}
+          <div className="relative max-w-2xl mx-auto">
+            {/* Envelope behind */}
+            <div className="absolute -bottom-6 -left-4 -right-4 h-48 md:h-64">
+              <svg viewBox="0 0 600 200" className="w-full h-full" fill="none">
+                <rect x="0" y="0" width="600" height="200" fill="#1a1a2e" stroke="#e84393" strokeWidth="2" />
+                <path d="M0 5L300 120L600 5" stroke="#e84393" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.4" />
+                {/* Return address */}
+                <text x="20" y="170" fontSize="10" fill="#e84393" opacity="0.4" fontFamily="Georgia, serif" fontStyle="italic">The Office of Magical Correspondence</text>
+                <text x="20" y="185" fontSize="10" fill="#e84393" opacity="0.3" fontFamily="Georgia, serif" fontStyle="italic">Whispering Woods Post Office</text>
+                {/* Wax seal */}
+                <circle cx="540" cy="160" r="18" fill="#e84393" />
+                <circle cx="540" cy="160" r="12" fill="#ff2d95" />
+                <path d="M540 152L542 158L548 158L543 162L545 168L540 164L535 168L537 162L532 158L538 158Z" fill="white" opacity="0.8" />
+                {/* Stamp area */}
+                <rect x="520" y="20" width="50" height="60" stroke="#e84393" strokeWidth="0.5" fill="none" opacity="0.2" strokeDasharray="3,2" />
+              </svg>
             </div>
-            <div className="mt-6 pt-6 border-t border-white/10 flex items-center gap-3 text-sm text-white/20">
-              <span className="border border-pink-neon/40 text-pink-neon px-3 py-1 text-xs font-bold uppercase tracking-wider">
-                Ages 3-6
-              </span>
-              <span>AI-crafted. Human-hearted.</span>
+
+            {/* The letter image */}
+            <div className="relative z-10 neon-border overflow-hidden shadow-[0_0_60px_#e8439320]">
+              <Image
+                src="/brand/first-letter.png"
+                alt="A real Wonderpunk letter — handwritten style, illustrated, personalised for a child named Joanie"
+                width={800}
+                height={1100}
+                className="w-full h-auto"
+                priority
+              />
             </div>
+
+            {/* Floating sparkles around the letter */}
+            {[
+              { x: "-5%", y: "10%", c: "#e84393" },
+              { x: "102%", y: "25%", c: "#00d4ff" },
+              { x: "-3%", y: "60%", c: "#6c5ce7" },
+              { x: "103%", y: "70%", c: "#fd79a8" },
+              { x: "50%", y: "-3%", c: "#e84393" },
+              { x: "30%", y: "103%", c: "#00d4ff" },
+            ].map((s, i) => (
+              <div
+                key={i}
+                className="absolute animate-sparkle"
+                style={{ left: s.x, top: s.y, animationDelay: `${i * 0.4}s` }}
+              >
+                <svg width="12" height="12" viewBox="0 0 12 12">
+                  <path d="M6 0L7.2 4.8L12 6L7.2 7.2L6 12L4.8 7.2L0 6L4.8 4.8Z" fill={s.c} />
+                </svg>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex items-center justify-center gap-4 mt-16 text-sm text-white/20">
+            <span className="border border-pink-neon/40 text-pink-neon px-3 py-1 text-xs font-bold uppercase tracking-wider">
+              Ages 3-6
+            </span>
+            <span>AI-crafted. Human-hearted.</span>
           </div>
         </div>
       </section>
