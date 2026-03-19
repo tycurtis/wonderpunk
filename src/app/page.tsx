@@ -167,6 +167,9 @@ export default function Home() {
       <section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden bg-white">
         <GlitterCanvas />
 
+        {/* Gradient transition to dark at bottom */}
+        <div className="absolute bottom-0 left-0 right-0 h-[40vh] bg-gradient-to-b from-transparent via-[#111111]/60 to-[#111111] pointer-events-none z-20" />
+
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <BunnyLogo className="w-16 h-20 mx-auto mb-8 text-gray-900" />
 
@@ -200,8 +203,7 @@ export default function Home() {
       </section>
 
       {/* ═══ THE PROBLEM ═══ */}
-      <section className="py-24 px-6 bg-gray-900 relative">
-        <div className="absolute left-0 top-0 w-full h-[1px] holographic" />
+      <section className="pt-32 pb-24 px-6 bg-gradient-to-b from-[#111111] to-gray-900 relative">
         <div className="max-w-4xl mx-auto md:flex md:items-center md:gap-16">
           <div className="md:w-1/2 mb-10 md:mb-0">
             <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-white mb-8">
@@ -233,48 +235,68 @@ export default function Home() {
       {/* ═══ HOW IT WORKS — PARALLAX SCROLL ═══ */}
       <ParallaxSteps />
 
-      {/* ═══ DIVIDER ═══ */}
-      <div className="bg-gray-900 relative">
-        <div className="absolute left-0 top-0 w-full h-[1px] holographic" />
-      </div>
-
       {/* ═══ FOR WHO ═══ */}
-      <section className="py-24 px-6 bg-background relative">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-white mb-12">
+      <section className="py-32 px-6 bg-gradient-to-b from-background via-[#0d0d18] to-background relative overflow-hidden">
+        {/* Subtle ambient glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-pink-neon/[0.03] blur-[100px] pointer-events-none" />
+
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-white mb-16">
             Built for the <span className="text-pink-neon">misfits</span>
             <br />who love kids.
           </h2>
-          <div className="grid sm:grid-cols-2 gap-4 text-left max-w-2xl mx-auto">
+
+          {/* Staggered glass cards */}
+          <div className="max-w-3xl mx-auto space-y-6">
             {[
               {
                 who: "The Gay Uncle",
                 desc: "You adore your nieces and nephews. Now you can be the one who sends them weekly magic.",
+                color: "#e84393",
+                align: "mr-auto",
               },
               {
                 who: "The Overseas Grandparent",
                 desc: "Twelve thousand kilometres away but present in their imagination every single fortnight.",
+                color: "#00d4ff",
+                align: "ml-auto",
               },
               {
                 who: "The Fun Aunty",
                 desc: "You're the godmother, the chosen family, the one who wants to be more than a birthday visitor.",
+                color: "#6c5ce7",
+                align: "mr-auto md:ml-12",
               },
               {
                 who: "The FIFO Parent",
                 desc: "Two weeks on, one week off. Your letters arrive even when you can't.",
+                color: "#fd79a8",
+                align: "ml-auto md:mr-12",
               },
             ].map((p) => (
-              <div key={p.who} className="neon-border bg-gray-900/50 p-6">
-                <h3 className="font-bold text-pink-neon text-lg mb-2 uppercase tracking-wide">
+              <div
+                key={p.who}
+                className={`${p.align} max-w-sm p-8 rounded-2xl backdrop-blur-sm text-left`}
+                style={{
+                  background: `linear-gradient(135deg, ${p.color}08, ${p.color}03)`,
+                  border: `1px solid ${p.color}20`,
+                  boxShadow: `0 0 30px ${p.color}08`,
+                }}
+              >
+                <h3
+                  className="font-bold text-lg mb-3 uppercase tracking-wide"
+                  style={{ color: p.color }}
+                >
                   {p.who}
                 </h3>
-                <p className="text-white/40 text-sm leading-relaxed">
+                <p className="text-white/50 text-sm leading-relaxed">
                   {p.desc}
                 </p>
               </div>
             ))}
           </div>
-          <p className="mt-10 text-white/20 text-sm uppercase tracking-widest">
+
+          <p className="mt-16 text-white/20 text-sm tracking-widest">
             All family shapes welcome. Chosen family. Blended family.
             <br />Any configuration of people who love a kid.
           </p>
@@ -282,8 +304,7 @@ export default function Home() {
       </section>
 
       {/* ═══ THE MOMENT ═══ */}
-      <section className="py-24 px-6 bg-gray-900 relative">
-        <div className="absolute left-0 top-0 w-full h-[1px] holographic" />
+      <section className="py-32 px-6 bg-gradient-to-b from-background to-gray-900 relative">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-white mb-4">
             The <span className="text-pink-neon">moment</span> it arrives.
@@ -302,7 +323,7 @@ export default function Home() {
       <LetterFoldFly />
 
       {/* ═══ PRICING ═══ */}
-      <section className="py-24 px-6 bg-background">
+      <section className="py-32 px-6 bg-gradient-to-b from-gray-900 to-background">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-white mb-4">
             Less than a <span className="text-pink-neon">coffee</span> a week.
@@ -375,9 +396,8 @@ export default function Home() {
       {/* ═══ WAITLIST ═══ */}
       <section
         id="waitlist"
-        className="py-24 px-6 bg-gray-900 relative"
+        className="py-32 px-6 bg-gradient-to-b from-background to-gray-900 relative"
       >
-        <div className="absolute left-0 top-0 w-full h-[1px] holographic" />
         <div className="max-w-xl mx-auto text-center">
           <BunnyLogo className="w-12 h-16 mx-auto mb-6 text-pink-neon" />
           <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-white mb-4">
