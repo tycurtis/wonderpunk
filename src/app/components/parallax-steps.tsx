@@ -195,53 +195,55 @@ export default function ParallaxSteps() {
   const continuousStep = scrollProgress * (totalSteps - 1);
   const activeStep = Math.round(continuousStep);
 
-  // Ease function for smoother feel
-  const ease = (t: number) => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+  const ease = (t: number) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
-  // Each step occupies a range. Within that range:
-  // 0-15%: fade in from black
-  // 15-75%: fully visible (hold)
-  // 75-100%: fade out to black
+  // Each step gets its own zone with generous overlap for crossfading
   const getVisibility = (index: number) => {
-    const stepSize = 1 / totalSteps;
-    const stepStart = index * stepSize;
-    const stepEnd = stepStart + stepSize;
+    // Each step center point
+    const center = index / (totalSteps - 1);
+    // How far is scroll from this step's center
+    const distance = Math.abs(scrollProgress - center);
+    // Visibility window — wider = more hold time
+    const window = 0.12;
 
-    // Where are we within this step's range?
-    const localProgress = (scrollProgress - stepStart) / stepSize;
-
-    if (localProgress < 0 || localProgress > 1) return 0;
-
-    // Fade in zone: 0 to 0.15
-    if (localProgress < 0.15) {
-      return ease(localProgress / 0.15);
-    }
-    // Hold zone: 0.15 to 0.75
-    if (localProgress < 0.75) {
-      return 1;
-    }
-    // Fade out zone: 0.75 to 1.0
-    return ease(1 - (localProgress - 0.75) / 0.25);
+    if (distance < window) return 1; // Fully visible near center
+    // Fade zone
+    const fadeRange = 0.06;
+    const fadeProgress = Math.min(1, (distance - window) / fadeRange);
+    return Math.max(0, 1 - ease(fadeProgress));
   };
 
   const getStepStyle = (index: number) => {
-    const opacity = getVisibility(index);
-    const distance = continuousStep - index;
-    const scale = 0.9 + opacity * 0.1;
+    const vis = getVisibility(index);
+    const center = index / (totalSteps - 1);
+    const direction = scrollProgress - center;
+
+    // Smooth entrance from below, exit upward
+    const translateY = direction > 0
+      ? -(1 - vis) * 40  // Exit: slide up
+      : (1 - vis) * 40;  // Enter: from below
+    const scale = 0.92 + vis * 0.08;
+    const blur = (1 - vis) * 6;
 
     return {
-      opacity,
-      transform: `scale(${scale})`,
+      opacity: vis,
+      transform: `translateY(${translateY}px) scale(${scale})`,
+      filter: blur > 0.5 ? `blur(${blur}px)` : "none",
       transition: "none",
     };
   };
 
   const getTextStyle = (index: number) => {
-    const opacity = getVisibility(index);
-    const translateY = (1 - opacity) * 30 * (continuousStep > index ? -1 : 1);
+    const vis = getVisibility(index);
+    const center = index / (totalSteps - 1);
+    const direction = scrollProgress - center;
+
+    const translateY = direction > 0
+      ? -(1 - vis) * 50
+      : (1 - vis) * 50;
 
     return {
-      opacity,
+      opacity: vis,
       transform: `translateY(${translateY}px)`,
       transition: "none",
     };
@@ -261,7 +263,7 @@ export default function ParallaxSteps() {
       </div>
 
       {/* Desktop: tall scrollable container with sticky panels */}
-      <div className="hidden md:block" style={{ height: `${totalSteps * 250}vh` }}>
+      <div className="hidden md:block" style={{ height: `${totalSteps * 200}vh` }}>
         <div className="sticky top-0 h-screen flex overflow-hidden">
           {/* Left — animated icon */}
           <div className="w-1/2 flex items-center justify-center px-12 relative">
