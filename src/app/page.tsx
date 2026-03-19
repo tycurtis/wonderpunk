@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { UnicornWriter, PropsLayout, LetterboxMoment, LetterboxExplosion } from "./components/illustrations";
+import ParallaxSteps from "./components/parallax-steps";
 
 function Sparkle({ className }: { className?: string }) {
   return (
@@ -226,59 +227,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ THE SOLUTION ═══ */}
-      <section className="py-24 px-6 bg-background relative">
-        <div className="max-w-4xl mx-auto">
-          <div className="md:flex md:items-center md:gap-16 mb-20">
-            <div className="md:w-1/2 mb-10 md:mb-0">
-              <UnicornWriter className="w-full" />
-            </div>
-            <div className="md:w-1/2">
-              <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-white mb-4">
-                Be the most <span className="text-pink-neon">anticipated</span>
-                <br />person in their week.
-              </h2>
-              <p className="text-white/40 text-lg">
-                Wonderpunk lets you send personalised, illustrated magic letters
-                to the kids you love — no matter where you are.
-              </p>
-            </div>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              {
-                num: "01",
-                title: "You craft the story",
-                desc: "Our AI helps you write age-perfect letters with beautiful illustrations. Add personal touches only you would know. Takes 5 minutes.",
-              },
-              {
-                num: "02",
-                title: "We make it real",
-                desc: "We print your letter on beautiful stock, add props (fairy dust, treasure maps, unicorn poop), and post it to their letterbox.",
-              },
-              {
-                num: "03",
-                title: "They get magic mail",
-                desc: "A letter arrives addressed to THEM. Their name, their adventure, from someone who loves them. Every. Single. Fortnight.",
-              },
-            ].map((s) => (
-              <div
-                key={s.num}
-                className="neon-border bg-gray-900/50 p-8 relative group hover:shadow-[0_0_30px_#e8439340] transition-shadow"
-              >
-                <span className="text-5xl font-black text-pink-neon/20 absolute top-4 right-6">
-                  {s.num}
-                </span>
-                <h3 className="text-xl font-bold text-white mb-3 uppercase tracking-wide">
-                  {s.title}
-                </h3>
-                <p className="text-white/40 leading-relaxed">{s.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* ═══ HOW IT WORKS — PARALLAX SCROLL ═══ */}
+      <ParallaxSteps />
 
       {/* ═══ DIVIDER ═══ */}
       <div className="bg-gray-900 relative">
