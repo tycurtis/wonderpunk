@@ -164,31 +164,70 @@ const steps = [
 ];
 
 export default function ParallaxSteps() {
-  const [activeStep, setActiveStep] = useState(0);
-  const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const observers: IntersectionObserver[] = [];
+    let rafId: number;
 
-    sectionRefs.current.forEach((ref, index) => {
-      if (!ref) return;
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            setActiveStep(index);
-          }
-        },
-        { threshold: 0.6 }
-      );
-      observer.observe(ref);
-      observers.push(observer);
-    });
+    const onScroll = () => {
+      rafId = requestAnimationFrame(() => {
+        if (!containerRef.current) return;
+        const rect = containerRef.current.getBoundingClientRect();
+        const containerHeight = containerRef.current.offsetHeight;
+        const viewportHeight = window.innerHeight;
+        // Progress from 0 (top of container at bottom of viewport) to 1 (bottom of container at top)
+        const rawProgress = (-rect.top) / (containerHeight - viewportHeight);
+        setScrollProgress(Math.max(0, Math.min(1, rawProgress)));
+      });
+    };
 
-    return () => observers.forEach((o) => o.disconnect());
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(rafId);
+    };
   }, []);
 
+  const totalSteps = steps.length;
+  // Map scroll progress to a continuous step value (0 to totalSteps-1)
+  const continuousStep = scrollProgress * (totalSteps - 1);
+  const activeStep = Math.round(continuousStep);
+
+  // Calculate per-step opacity and transform based on continuous scroll
+  const getStepStyle = (index: number) => {
+    const distance = continuousStep - index;
+    const absDistance = Math.abs(distance);
+
+    // Smooth interpolation
+    const opacity = Math.max(0, 1 - absDistance * 1.5);
+    const translateY = distance * -60;
+    const scale = 1 - absDistance * 0.15;
+
+    return {
+      opacity,
+      transform: `translateY(${translateY}px) scale(${Math.max(0.7, scale)})`,
+      transition: "none", // No CSS transition — driven purely by scroll position
+    };
+  };
+
+  const getTextStyle = (index: number) => {
+    const distance = continuousStep - index;
+    const absDistance = Math.abs(distance);
+
+    const opacity = Math.max(0, 1 - absDistance * 2);
+    const translateY = distance * -80;
+
+    return {
+      opacity,
+      transform: `translateY(${translateY}px)`,
+      transition: "none",
+    };
+  };
+
   return (
-    <section className="relative bg-background">
+    <section className="relative bg-background" ref={containerRef}>
       {/* Section header */}
       <div className="text-center pt-24 pb-12 px-6">
         <p className="text-sm font-bold text-pink-neon uppercase tracking-[0.3em] mb-4">
@@ -200,103 +239,108 @@ export default function ParallaxSteps() {
         </h2>
       </div>
 
-      {/* Scrolling steps */}
-      <div className="relative">
-        {/* Sticky left panel (desktop) */}
-        <div className="hidden md:block">
-          <div className="flex">
-            {/* Left sticky column */}
-            <div className="w-1/2 relative">
-              <div className="sticky top-0 h-screen flex items-center justify-center px-12">
-                <div className="w-full max-w-sm">
-                  {steps.map((step, i) => (
+      {/* Desktop: tall scrollable container with sticky panels */}
+      <div className="hidden md:block" style={{ height: `${totalSteps * 100}vh` }}>
+        <div className="sticky top-0 h-screen flex overflow-hidden">
+          {/* Left — animated icon */}
+          <div className="w-1/2 flex items-center justify-center px-12 relative">
+            {steps.map((step, i) => (
+              <div
+                key={i}
+                className="absolute flex items-center justify-center"
+                style={getStepStyle(i)}
+              >
+                <div
+                  className="w-72 h-72"
+                  style={{ filter: `drop-shadow(0 0 25px ${step.accent}50)` }}
+                >
+                  {step.icon}
+                </div>
+              </div>
+            ))}
+
+            {/* Vertical progress line */}
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 h-64 w-[2px] bg-white/5">
+              <div
+                className="w-full rounded-full"
+                style={{
+                  height: `${(scrollProgress * 100)}%`,
+                  background: `linear-gradient(to bottom, #e84393, #00d4ff, #6c5ce7, #fd79a8, #ff2d95)`,
+                  boxShadow: "0 0 10px #e8439360",
+                  transition: "none",
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Right — text content */}
+          <div className="w-1/2 flex items-center justify-center px-12 relative">
+            {steps.map((step, i) => (
+              <div
+                key={i}
+                className="absolute max-w-md"
+                style={getTextStyle(i)}
+              >
+                <p
+                  className="text-xs font-bold uppercase tracking-[0.3em] mb-2"
+                  style={{ color: step.accent }}
+                >
+                  {step.subtitle}
+                </p>
+                <span
+                  className="text-8xl font-black block mb-4 leading-none"
+                  style={{ color: step.accent, opacity: 0.15 }}
+                >
+                  {step.num}
+                </span>
+                <h3 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tight mb-6">
+                  {step.title}
+                </h3>
+                <p className="text-lg text-white/50 leading-relaxed">
+                  {step.desc}
+                </p>
+                {/* Progress dots */}
+                <div className="flex gap-2 mt-8">
+                  {steps.map((_, j) => (
                     <div
-                      key={i}
-                      className="absolute inset-0 flex items-center justify-center px-12 transition-all duration-700"
+                      key={j}
+                      className="h-1 rounded-full"
                       style={{
-                        opacity: activeStep === i ? 1 : 0,
-                        transform: activeStep === i ? "translateY(0) scale(1)" : activeStep > i ? "translateY(-40px) scale(0.9)" : "translateY(40px) scale(0.9)",
+                        width: activeStep === j ? "32px" : "8px",
+                        backgroundColor: activeStep === j ? step.accent : "#333",
+                        boxShadow: activeStep === j ? `0 0 10px ${step.accent}60` : "none",
+                        transition: "width 0.3s, background-color 0.3s, box-shadow 0.3s",
                       }}
-                    >
-                      <div className="w-64 h-64" style={{ filter: `drop-shadow(0 0 20px ${step.accent}40)` }}>
-                        {step.icon}
-                      </div>
-                    </div>
+                    />
                   ))}
                 </div>
               </div>
-            </div>
-
-            {/* Right scrolling column */}
-            <div className="w-1/2">
-              {steps.map((step, i) => (
-                <div
-                  key={i}
-                  ref={(el) => { sectionRefs.current[i] = el; }}
-                  className="min-h-screen flex items-center px-12 py-24"
-                >
-                  <div className="max-w-md">
-                    <p
-                      className="text-xs font-bold uppercase tracking-[0.3em] mb-2"
-                      style={{ color: step.accent }}
-                    >
-                      {step.subtitle}
-                    </p>
-                    <span
-                      className="text-8xl font-black block mb-4 leading-none"
-                      style={{ color: step.accent, opacity: 0.15 }}
-                    >
-                      {step.num}
-                    </span>
-                    <h3 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tight mb-6">
-                      {step.title}
-                    </h3>
-                    <p className="text-lg text-white/50 leading-relaxed">
-                      {step.desc}
-                    </p>
-                    {/* Progress dots */}
-                    <div className="flex gap-2 mt-8">
-                      {steps.map((_, j) => (
-                        <div
-                          key={j}
-                          className="h-1 rounded-full transition-all duration-500"
-                          style={{
-                            width: activeStep === j ? "32px" : "8px",
-                            backgroundColor: activeStep === j ? step.accent : "#333",
-                            boxShadow: activeStep === j ? `0 0 10px ${step.accent}60` : "none",
-                          }}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+            ))}
           </div>
         </div>
+      </div>
 
-        {/* Mobile layout (stacked) */}
-        <div className="md:hidden px-6 pb-24">
-          {steps.map((step, i) => (
-            <div key={i} className="py-16 border-t border-white/5 first:border-t-0">
-              <div className="w-40 h-40 mx-auto mb-8" style={{ filter: `drop-shadow(0 0 15px ${step.accent}40)` }}>
-                {step.icon}
-              </div>
-              <p className="text-xs font-bold uppercase tracking-[0.3em] mb-2" style={{ color: step.accent }}>
-                {step.subtitle}
-              </p>
-              <span className="text-6xl font-black block mb-2 leading-none" style={{ color: step.accent, opacity: 0.15 }}>
-                {step.num}
-              </span>
-              <h3 className="text-2xl font-black text-white uppercase tracking-tight mb-4">
-                {step.title}
-              </h3>
-              <p className="text-base text-white/50 leading-relaxed">
-                {step.desc}
-              </p>
+      {/* Mobile layout (stacked) */}
+      <div className="md:hidden px-6 pb-24">
+        {steps.map((step, i) => (
+          <div key={i} className="py-16 border-t border-white/5 first:border-t-0">
+            <div className="w-40 h-40 mx-auto mb-8" style={{ filter: `drop-shadow(0 0 15px ${step.accent}40)` }}>
+              {step.icon}
             </div>
-          ))}
-        </div>
+            <p className="text-xs font-bold uppercase tracking-[0.3em] mb-2" style={{ color: step.accent }}>
+              {step.subtitle}
+            </p>
+            <span className="text-6xl font-black block mb-2 leading-none" style={{ color: step.accent, opacity: 0.15 }}>
+              {step.num}
+            </span>
+            <h3 className="text-2xl font-black text-white uppercase tracking-tight mb-4">
+              {step.title}
+            </h3>
+            <p className="text-base text-white/50 leading-relaxed">
+              {step.desc}
+            </p>
+          </div>
+        ))}
       </div>
     </section>
   );
