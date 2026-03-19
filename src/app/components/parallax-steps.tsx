@@ -247,7 +247,7 @@ export default function ParallaxSteps() {
       </div>
 
       {/* Desktop: tall scrollable container with sticky panels */}
-      <div className="hidden md:block" style={{ height: `${totalSteps * 150}vh` }}>
+      <div className="hidden md:block" style={{ height: `${totalSteps * 250}vh` }}>
         <div className="sticky top-0 h-screen flex overflow-hidden">
           {/* Left — animated icon */}
           <div className="w-1/2 flex items-center justify-center px-12 relative">
