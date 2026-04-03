@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useCallback } from "react";
 
 const items = [
   {
@@ -86,15 +86,11 @@ const items = [
     icon: (
       <svg viewBox="0 0 100 100" fill="none" className="w-full h-full">
         <rect x="15" y="15" width="70" height="70" rx="0" fill="none" stroke="#ff2d95" strokeWidth="1.5" />
-        {/* Star */}
         <path d="M35 30L38 23L41 30L48 30L43 35L45 42L38 38L31 42L33 35L28 30Z" fill="#e84393" opacity="0.7">
           <animate attributeName="opacity" values="0.5;0.9;0.5" dur="2s" repeatCount="indefinite" />
         </path>
-        {/* Heart */}
         <path d="M65 27C65 23 60 20 57 23C54 20 49 23 49 27C49 33 57 38 57 38C57 38 65 33 65 27Z" fill="#00d4ff" opacity="0.6" />
-        {/* Moon */}
         <path d="M30 55C30 47 36 40 44 40C38 40 33 47 33 55C33 63 38 70 44 70C36 70 30 63 30 55Z" fill="#6c5ce7" opacity="0.5" />
-        {/* Skull (punk!) */}
         <circle cx="65" cy="60" r="10" fill="none" stroke="#ff2d95" strokeWidth="1" />
         <circle cx="61" cy="57" r="2" fill="#ff2d95" />
         <circle cx="69" cy="57" r="2" fill="#ff2d95" />
@@ -118,75 +114,78 @@ const items = [
   },
 ];
 
+const smoothstep = (t: number) => t * t * (3 - 2 * t);
+
 export default function MagicMailReveal() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const [progress, setProgress] = useState(0);
+  const glowRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLDivElement>(null);
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  useEffect(() => {
-    let rafId: number;
-    const onScroll = () => {
-      rafId = requestAnimationFrame(() => {
-        if (!sectionRef.current) return;
-        const rect = sectionRef.current.getBoundingClientRect();
-        const h = sectionRef.current.offsetHeight;
-        const vh = window.innerHeight;
-        const p = Math.max(0, Math.min(1, -rect.top / (h - vh)));
-        setProgress(p);
-      });
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => { window.removeEventListener("scroll", onScroll); cancelAnimationFrame(rafId); };
+  const update = useCallback(() => {
+    if (!sectionRef.current) return;
+    const rect = sectionRef.current.getBoundingClientRect();
+    const h = sectionRef.current.offsetHeight;
+    const vh = window.innerHeight;
+    const p = Math.max(0, Math.min(1, -rect.top / (h - vh)));
+
+    // Background glow
+    if (glowRef.current) {
+      glowRef.current.style.opacity = String(Math.min(1, p * 3));
+    }
+
+    // Title
+    if (titleRef.current) {
+      const titleP = Math.min(1, p * 4);
+      titleRef.current.style.opacity = String(titleP);
+      titleRef.current.style.transform = `translateY(${Math.max(0, (1 - titleP) * 30)}px)`;
+    }
+
+    // Items
+    itemRefs.current.forEach((el, i) => {
+      if (!el) return;
+      const appearAt = 0.1 + (i / items.length) * 0.3;
+      const raw = Math.max(0, Math.min(1, (p - appearAt) * 4));
+      const ease = smoothstep(raw);
+      el.style.opacity = String(ease);
+      el.style.transform = `translateY(${(1 - ease) * 40}px)`;
+    });
   }, []);
 
+  useEffect(() => {
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(() => {
+          update();
+          ticking = false;
+        });
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    update();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [update]);
+
   return (
-    <section ref={sectionRef} className="relative bg-background" style={{ height: "400vh" }}>
+    <section ref={sectionRef} className="relative bg-background" style={{ height: "200vh" }}>
       <div className="sticky top-0 h-screen overflow-hidden flex items-center justify-center">
-        {/* Background glow that intensifies */}
         <div
+          ref={glowRef}
           className="absolute inset-0"
           style={{
             background: `radial-gradient(circle at 50% 50%, #e8439308 0%, transparent 60%)`,
-            opacity: progress * 2,
+            opacity: 0,
+            willChange: "opacity",
           }}
         />
 
-        {/* Floating particles that appear as you scroll */}
-        <div className="absolute inset-0 pointer-events-none">
-          {[...Array(30)].map((_, i) => {
-            const x = 10 + (i * 31) % 80;
-            const y = 10 + (i * 47) % 80;
-            const colors = ["#e84393", "#00d4ff", "#6c5ce7", "#fd79a8", "#ff2d95"];
-            const appearAt = (i / 30) * 0.6;
-            const opacity = Math.max(0, Math.min(0.5, (progress - appearAt) * 2));
-            const floatY = Math.sin((progress * 10) + i) * 15;
-            return (
-              <div
-                key={i}
-                className="absolute"
-                style={{
-                  left: `${x}%`,
-                  top: `${y}%`,
-                  opacity,
-                  transform: `translateY(${floatY}px)`,
-                }}
-              >
-                <svg width="8" height="8" viewBox="0 0 8 8">
-                  <path d="M4 0L4.8 3.2L8 4L4.8 4.8L4 8L3.2 4.8L0 4L3.2 3.2Z" fill={colors[i % colors.length]} />
-                </svg>
-              </div>
-            );
-          })}
-        </div>
-
         <div className="relative z-10 w-full max-w-5xl mx-auto px-6">
-          {/* Title — fades in early */}
           <div
-            className="text-center mb-16"
-            style={{
-              opacity: Math.min(1, progress * 5),
-              transform: `translateY(${Math.max(0, (1 - progress * 5) * 40)}px)`,
-            }}
+            ref={titleRef}
+            className="text-center mb-12 md:mb-16"
+            style={{ opacity: 0, willChange: "transform, opacity" }}
           >
             <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tight text-white mb-4">
               What&apos;s inside the<br />
@@ -197,64 +196,33 @@ export default function MagicMailReveal() {
             </p>
           </div>
 
-          {/* Items grid — each appears at different scroll points */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
-            {items.map((item, i) => {
-              const appearAt = 0.15 + (i / items.length) * 0.5;
-              const itemProgress = Math.max(0, Math.min(1, (progress - appearAt) * 3));
-              const ease = itemProgress < 0.5
-                ? 2 * itemProgress * itemProgress
-                : 1 - Math.pow(-2 * itemProgress + 2, 2) / 2;
-
-              return (
+            {items.map((item, i) => (
+              <div
+                key={i}
+                ref={(el) => { itemRefs.current[i] = el; }}
+                className="text-center"
+                style={{ opacity: 0, willChange: "transform, opacity" }}
+              >
                 <div
-                  key={i}
-                  className="text-center"
-                  style={{
-                    opacity: ease,
-                    transform: `translateY(${(1 - ease) * 60}px) scale(${0.85 + ease * 0.15})`,
-                  }}
+                  className="w-24 h-24 md:w-28 md:h-28 mx-auto mb-4"
+                  style={{ filter: `drop-shadow(0 0 15px ${item.color}30)` }}
                 >
-                  {/* Icon with glow */}
-                  <div
-                    className="w-24 h-24 md:w-28 md:h-28 mx-auto mb-4 relative"
-                    style={{
-                      filter: `drop-shadow(0 0 ${15 + ease * 15}px ${item.color}${Math.round(ease * 60).toString(16).padStart(2, "0")})`,
-                    }}
-                  >
-                    {/* Rotating ring */}
-                    <svg
-                      className="absolute inset-0 w-full h-full"
-                      viewBox="0 0 100 100"
-                      style={{
-                        transform: `rotate(${progress * 360 + i * 60}deg)`,
-                        opacity: ease * 0.3,
-                      }}
-                    >
-                      <circle cx="50" cy="50" r="48" stroke={item.color} strokeWidth="0.5" fill="none" strokeDasharray="8,12" />
-                    </svg>
-                    {item.icon}
-                  </div>
-                  <h3
-                    className="text-sm md:text-base font-black uppercase tracking-wider mb-2"
-                    style={{ color: item.color }}
-                  >
-                    {item.name}
-                  </h3>
-                  <p className="text-xs md:text-sm text-white/40 leading-relaxed max-w-[200px] mx-auto">
-                    {item.desc}
-                  </p>
+                  {item.icon}
                 </div>
-              );
-            })}
+                <h3
+                  className="text-sm md:text-base font-black uppercase tracking-wider mb-2"
+                  style={{ color: item.color }}
+                >
+                  {item.name}
+                </h3>
+                <p className="text-xs md:text-sm text-white/40 leading-relaxed max-w-[200px] mx-auto">
+                  {item.desc}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
-
-        {/* Holographic line at bottom */}
-        <div
-          className="absolute bottom-0 left-0 w-full h-[1px] holographic"
-          style={{ opacity: progress > 0.8 ? (progress - 0.8) * 5 : 0 }}
-        />
       </div>
     </section>
   );

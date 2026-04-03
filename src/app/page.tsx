@@ -47,7 +47,7 @@ function GlitterCanvas() {
     window.addEventListener("resize", resize);
 
     // Create particles
-    for (let i = 0; i < 120; i++) {
+    for (let i = 0; i < 60; i++) {
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
@@ -152,12 +152,28 @@ export default function Home() {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
+  const [error, setError] = useState("");
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
     setSubmitting(true);
-    await new Promise((r) => setTimeout(r, 800));
-    setSubmitted(true);
+    setError("");
+    try {
+      const res = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, persona }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setSubmitted(true);
+      } else {
+        setError(data.error || "Something went wrong. Try again?");
+      }
+    } catch {
+      setError("Couldn't connect. Try again?");
+    }
     setSubmitting(false);
   };
 
@@ -203,7 +219,7 @@ export default function Home() {
       </section>
 
       {/* ═══ THE PROBLEM ═══ */}
-      <section className="pt-32 pb-24 px-6 bg-gradient-to-b from-[#111111] to-gray-900 relative">
+      <section className="pt-32 pb-24 px-6 bg-background relative">
         <div className="max-w-4xl mx-auto md:flex md:items-center md:gap-16">
           <div className="md:w-1/2 mb-10 md:mb-0">
             <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-white mb-8">
@@ -227,7 +243,16 @@ export default function Home() {
             </div>
           </div>
           <div className="md:w-1/2">
-            <LetterboxMoment className="w-full" />
+            <div className="relative rounded-lg overflow-hidden shadow-2xl shadow-pink-neon/10">
+              <Image
+                src="/photos/letter-flatlay.webp"
+                alt="A real Wonderpunk letter on kraft paper with fairy dust bottle, sticker, and illustrated envelope"
+                width={1200}
+                height={900}
+                className="w-full h-auto"
+                priority
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -236,7 +261,7 @@ export default function Home() {
       <ParallaxSteps />
 
       {/* ═══ FOR WHO ═══ */}
-      <section className="py-32 px-6 bg-gradient-to-b from-background via-[#0d0d18] to-background relative overflow-hidden">
+      <section className="py-32 px-6 bg-background relative overflow-hidden">
         {/* Subtle ambient glow */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-pink-neon/[0.03] blur-[100px] pointer-events-none" />
 
@@ -303,27 +328,60 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ THE MOMENT ═══ */}
-      <section className="py-32 px-6 bg-gradient-to-b from-background to-gray-900 relative">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-white mb-4">
-            The <span className="text-pink-neon">moment</span> it arrives.
-          </h2>
-          <p className="text-white/40 mb-12 text-lg">
-            This is what it&apos;s all about. The letterbox. The envelope. The explosion of wonder.
-          </p>
-          <LetterboxExplosion className="w-full max-w-2xl mx-auto" />
-        </div>
-      </section>
-
       {/* ═══ WHAT'S INSIDE ═══ */}
       <MagicMailReveal />
 
       {/* ═══ LETTER FOLD & FLY ═══ */}
       <LetterFoldFly />
 
+      {/* ═══ THE REAL THING ═══ */}
+      <section className="py-32 px-6 bg-background relative">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-white mb-4">
+              This is <span className="text-pink-neon">real.</span>
+            </h2>
+            <p className="text-white/40 text-lg max-w-xl mx-auto">
+              Not a mockup. Not a render. A real letter we made for a real kid.
+              Kraft paper, hand-drawn unicorns, fairy dust, and a lot of love.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-5 gap-6 items-center">
+            <div className="md:col-span-3 rounded-lg overflow-hidden shadow-2xl shadow-pink-neon/10">
+              <Image
+                src="/photos/digital-letter.webp"
+                alt="The first Wonderpunk letter — a complete illustrated letter to Joanie with unicorns, fairies, and adventure"
+                width={800}
+                height={1100}
+                className="w-full h-auto"
+              />
+            </div>
+            <div className="md:col-span-2 space-y-6">
+              <div className="rounded-lg overflow-hidden shadow-xl">
+                <Image
+                  src="/photos/writing-detail.webp"
+                  alt="Close-up of hand-drawn unicorn and fairy illustrations on the letter"
+                  width={800}
+                  height={600}
+                  className="w-full h-auto"
+                />
+              </div>
+              <div className="rounded-lg overflow-hidden shadow-xl">
+                <Image
+                  src="/photos/illustration-detail.webp"
+                  alt="Detail of the illustrated doorway scene showing thousands of unicorns"
+                  width={800}
+                  height={600}
+                  className="w-full h-auto"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ═══ PRICING ═══ */}
-      <section className="py-32 px-6 bg-gradient-to-b from-gray-900 to-background">
+      <section className="py-32 px-6 bg-background">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-white mb-4">
             Less than a <span className="text-pink-neon">coffee</span> a week.
@@ -396,7 +454,7 @@ export default function Home() {
       {/* ═══ WAITLIST ═══ */}
       <section
         id="waitlist"
-        className="py-32 px-6 bg-gradient-to-b from-background to-gray-900 relative"
+        className="py-32 px-6 bg-background relative"
       >
         <div className="max-w-xl mx-auto text-center">
           <BunnyLogo className="w-12 h-16 mx-auto mb-6 text-pink-neon" />
@@ -409,14 +467,20 @@ export default function Home() {
           </p>
 
           {submitted ? (
-            <div className="neon-border bg-gray-900/50 p-8">
-              <Sparkle className="w-8 h-8 text-pink-neon mx-auto mb-4" />
-              <h3 className="text-xl font-black text-white uppercase mb-2">
+            <div className="neon-border bg-gray-900/50 p-10 relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-pink-neon/5 to-transparent pointer-events-none" />
+              <Sparkle className="w-10 h-10 text-pink-neon mx-auto mb-5 animate-pulse" />
+              <h3 className="text-2xl font-black text-white uppercase mb-3">
                 You&apos;re on the list.
               </h3>
-              <p className="text-white/40">
-                The fairies have noted your address.
+              <p className="text-white/50 mb-6 text-lg">
+                The fairies have noted your address. We&apos;ll owl-post you
+                when it&apos;s time to send your first letter.
               </p>
+              <div className="inline-block bg-white/5 border border-white/10 px-6 py-3 text-sm text-white/30">
+                Signed up as <span className="text-pink-neon font-bold">{email}</span>
+                {persona && <> &middot; <span className="text-white/50">{persona}</span></>}
+              </div>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -462,6 +526,10 @@ export default function Home() {
               >
                 {submitting ? "Joining..." : "Join the Waitlist"}
               </button>
+
+              {error && (
+                <p className="text-red-400 text-sm mt-2">{error}</p>
+              )}
             </form>
           )}
         </div>
